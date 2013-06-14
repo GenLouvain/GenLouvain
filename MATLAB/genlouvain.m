@@ -149,7 +149,7 @@ if isa(B,'function_handle')
         it(:,i)=M(ii(i));
     end
     it=it(ii,:);
-    if nnz(it-it'),
+    if norm(it-it')>2*eps
         error('Function handle does not correspond to a symmetric matrix')
     end
 else

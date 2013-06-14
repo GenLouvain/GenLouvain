@@ -91,7 +91,7 @@ end
 N=length(A{1});
 T=length(A);
 
-if length(gamma)=1
+if length(gamma)==1
 gamma=repmat(gamma,T,1);
 end
 

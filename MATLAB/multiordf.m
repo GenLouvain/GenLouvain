@@ -1,4 +1,4 @@
-function [S,Q,B] = multiordf(A,omega)
+function [B] = multiordf(A,gamma,omega)
 %MULTIORD  Multislice community detection for ordered slices, matrix version
 %   Version 0.99, August 26, 2011.
 %
@@ -79,9 +79,21 @@ function [S,Q,B] = multiordf(A,omega)
 %       Inderjit S. Jutla and Peter J. Mucha, "A generalized Louvain method
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
+if nargin<2
+    gamma=1;
+end
+
+if nargin<3
+    omega=1;
+end
 
 N=length(A{1});
 T=length(A);
+
+if length(gamma)==1
+    gamma=repmat(gamma,T,1);
+end
+
 ii=[]; jj=[]; vv=[];
 for s=1:T
     indx=[1:N]'+(s-1)*N;
@@ -96,8 +108,6 @@ AA = sparse(ii,jj,vv,N*T,N*T);
 clear ii jj vv
 kvec = full(sum(AA));
 AA = AA + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
-B = @(i) AA(:,i) - kcell{ceil(i/(N+eps))}*kvec(i);
+B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*kcell{ceil(i/(N+eps))}*kvec(i);
 %[S,Q] = genlouvainrand(B);
 %S = reshape(S,N,T);
-S=0;
-Q=0;
