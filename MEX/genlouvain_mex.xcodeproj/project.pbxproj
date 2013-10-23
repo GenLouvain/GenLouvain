@@ -19,9 +19,8 @@
 
 /* Begin PBXFileReference section */
 		A034BDFC16D558830056C382 /* group_handler.mexmaci64 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = group_handler.mexmaci64; sourceTree = BUILT_PRODUCTS_DIR; };
-		A034BDFE16D558830056C382 /* mex.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = mex.xcconfig; sourceTree = "<group>"; };
+		A034BDFE16D558830056C382 /* mex.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = mex.xcconfig; sourceTree = SOURCE_ROOT; };
 		A034BE0416D5588F0056C382 /* metanetwork_reduce.mexmaci64 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = metanetwork_reduce.mexmaci64; sourceTree = BUILT_PRODUCTS_DIR; };
-		A034BE0616D5588F0056C382 /* mex.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = mex.xcconfig; sourceTree = "<group>"; };
 		A034BE0A16D5592A0056C382 /* group_handler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = group_handler.cpp; sourceTree = "<group>"; };
 		A034BE0B16D5592A0056C382 /* group_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = group_handler.h; sourceTree = "<group>"; };
 		A034BE0D16D559450056C382 /* full.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = full.cpp; sourceTree = "<group>"; };
@@ -41,8 +40,7 @@
 				A034BE0A16D5592A0056C382 /* group_handler.cpp */,
 				A034BE1A16D559D20056C382 /* metanetwork_reduce.cpp */,
 				A034BE0B16D5592A0056C382 /* group_handler.h */,
-				A034BDFD16D558830056C382 /* group_handler */,
-				A034BE0516D5588F0056C382 /* metanetwork_reduce */,
+				A034BDFE16D558830056C382 /* mex.xcconfig */,
 				A034BDF216D558610056C382 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,22 +52,6 @@
 				A034BE0416D5588F0056C382 /* metanetwork_reduce.mexmaci64 */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		A034BDFD16D558830056C382 /* group_handler */ = {
-			isa = PBXGroup;
-			children = (
-				A034BDFE16D558830056C382 /* mex.xcconfig */,
-			);
-			path = group_handler;
-			sourceTree = "<group>";
-		};
-		A034BE0516D5588F0056C382 /* metanetwork_reduce */ = {
-			isa = PBXGroup;
-			children = (
-				A034BE0616D5588F0056C382 /* mex.xcconfig */,
-			);
-			path = metanetwork_reduce;
 			sourceTree = "<group>";
 		};
 		A034BE1816D559640056C382 /* group_index */ = {
@@ -130,7 +112,7 @@
 		A034BDEB16D558610056C382 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = A034BDEE16D558610056C382 /* Build configuration list for PBXProject "genlouvain_mex" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -179,24 +161,24 @@
 		A034BDF516D558610056C382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Debug;
 		};
 		A034BDF616D558610056C382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Release;
 		};
@@ -204,6 +186,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -216,6 +199,7 @@
 				EXECUTABLE_EXTENSION = mexmaci64;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -230,13 +214,14 @@
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Debug;
 		};
@@ -244,6 +229,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
+				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -256,6 +242,7 @@
 				EXECUTABLE_EXTENSION = mexmaci64;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_FIELD_INITIALIZERS = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -270,55 +257,60 @@
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Release;
 		};
 		A034BE0816D5588F0056C382 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A034BE0616D5588F0056C382 /* mex.xcconfig */;
+			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_EXTENSION = mexmaci64;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Debug;
 		};
 		A034BE0916D5588F0056C382 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A034BE0616D5588F0056C382 /* mex.xcconfig */;
+			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
 				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_EXTENSION = mexmaci64;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
+				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
+				SYMROOT = "$(SRCROOT)";
 			};
 			name = Release;
 		};

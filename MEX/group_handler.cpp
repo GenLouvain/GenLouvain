@@ -138,7 +138,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
         }
     }
     //move current node to most optimal group
-    if(mod_max){
+    if(mod_max>0){
         g.move(node,group_move);
         d_step+=mod_max;
     }
