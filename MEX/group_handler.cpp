@@ -19,7 +19,16 @@
 //              moves node to group with maximum improvement in modularity (stays in same group
 //              if no improvement possible)
 //
-//              returns improvemnt if given an output argument
+//              returns improvement if given an output argument
+//
+//
+//      move:   takes a node index and the corresponding column of the modularity matrix as
+//              input
+//
+//              moves node to random group with improvement in modularity (stays in same group
+//              if no improvement possible)
+//
+//              returns improvement if given an output argument
 //
 //
 //      return: outputs the community assignment for all nodes as a tidy group vector, that is
@@ -35,10 +44,12 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <random>
+#include <stdlib.h>
 using namespace std;
 
 static group_index group;
-
+default_random_engine generator((unsigned int)time(0));
 
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
@@ -72,7 +83,19 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                 plhs[0]=mxCreateDoubleScalar(dstep);
             }
         }
-        else if (!strcmp(handle, "return")){
+		else if (!strcmp(handle, "moverand")){
+            if (nrhs!=3) {
+                mexErrMsgIdAndTxt("group_handler:moverand", "move needs 2 input arguments");
+            }
+            mwIndex node=((mwIndex) * mxGetPr(prhs[1]))-1;
+            double dstep=moverand(group, node, prhs[2]);
+            
+            //output improvement in modularity
+            if (nlhs>0) {
+                plhs[0]=mxCreateDoubleScalar(dstep);
+            }
+        }
+		else if (!strcmp(handle, "return")){
             if (nlhs>0) {
                 group.export_matlab(plhs[0]);
             }
@@ -95,7 +118,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
     set<mwIndex> unique_groups;
     unique_groups.insert(g.nodes[node]);
     
-    map<mwIndex, double> mod_c;
+    map<mwIndex, double> mod_c; 
     
     if (mxIsSparse(mod)) {
         sparse mod_s(mod);
@@ -127,22 +150,93 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
     //find best move
     double mod_max=0;
     double d_step=0;
-    
-    
-    mwIndex group_move=g.nodes[node]; //stay in current group if no improvement
-    
-    for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
+
+	mwIndex group_move=g.nodes[node]; //stay in current group if no improvement
+
+	for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
         if(mod_c[*it]>mod_max){
             mod_max=mod_c[*it];
             group_move=*it;
-        }
+		}
     }
+
     //move current node to most optimal group
     if(mod_max>0){
         g.move(node,group_move);
         d_step+=mod_max;
     }
+
+    return d_step;
+}
+
+//move node to random group increasing modularity
+double moverand(group_index & g, mwIndex node, const mxArray * mod){
+    set<mwIndex> unique_groups;
+    unique_groups.insert(g.nodes[node]);
     
+    map<mwIndex, double> mod_c; 
+    
+    if (mxIsSparse(mod)) {
+        sparse mod_s(mod);
+        
+        //add nodes with potential positive contribution to unique_groups
+        for(mwIndex j=0; j<mod_s.nzero(); j++){
+            if(mod_s.val[j]>0){
+                unique_groups.insert(g.nodes[mod_s.row[j]]);
+            }
+        }
+        
+        //calculate all changes in modularity
+        mod_c=mod_change( g, mod_s, unique_groups, node);
+    }
+    else {
+        full mod_d(mod);
+        
+        //add nodes with potential positive contribution to unique_groups
+        for(mwIndex j=0; j<g.n_nodes; j++){
+            if(mod_d.get(j)>0){
+                unique_groups.insert(g.nodes[j]);
+            }
+        }
+        
+        //calculate all changes in modularity
+        mod_c=mod_change(g, mod_d, unique_groups, node);
+    }
+    
+    //find a random modularity increasing move
+    double d_step=0;
+
+	std::vector<mwIndex> unique_groups_pos; // groups that increase modularity
+	std::vector<double>  mod_pos; // ammount by which they increase it
+    
+   
+
+	// store groups that increase modularity
+	bool notempty = false;
+	for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
+		if(mod_c[*it]>0){
+			notempty = true;
+			unique_groups_pos.push_back(*it);
+			mod_pos.push_back(mod_c[*it]);
+		}
+    }
+
+	// move node to a random group that increases modularity
+    uniform_int_distribution<mwIndex> randindex(0,unique_groups_pos.size()-1);
+    
+    mwIndex rand_move;
+	if(notempty){
+		//rand_move = rand() % unique_groups_pos.size();
+        rand_move = randindex(generator);
+        
+        //mexPrintf("move %d, length %d \n",rand_move,unique_groups_pos.size());
+	}
+	
+	if(notempty){ 
+		g.move(node,unique_groups_pos[rand_move]);
+        d_step+=mod_pos[rand_move];
+	}
+
     return d_step;
 }
 
@@ -167,6 +261,7 @@ map<mwIndex, double> mod_change(group_index &g, full & mod, set<mwIndex> & uniqu
     
     return mod_c;
 }
+
 
 //calculates changes in modularity for sparse modularity matrix
 map<mwIndex,double> mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, mwIndex current_node){

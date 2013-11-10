@@ -1,4 +1,4 @@
-function [S,Q] = genlouvain(B,limit,verbose,randord)
+function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %GENLOUVAINMEX  Louvain-like community detection, specified quality function.
 %   Version 1.2 (July 2012)
 %
@@ -113,12 +113,12 @@ function [S,Q] = genlouvain(B,limit,verbose,randord)
 %        in MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2011-2012).
 
 %set default for maximum size of modularity matrix
-if nargin<2
+if nargin<2||isempty(limit)
     limit = 10000;
 end
 
 %set level of reported/displayed text output
-if nargin<3
+if nargin<3||isempty(verbose)
     verbose = 1;
 end
 if verbose
@@ -128,13 +128,23 @@ else
 end
 
 %set randperm- v. index-ordered
-if nargin<4
+if nargin<4||isempty(randord)
     randord = 1;
 end
 if randord
     myord = @(n) randperm(n);
 else
     myord = @(n) 1:n;
+end
+
+%set move function (maximal (original Louvain) or random improvement)
+if nargin<5||isempty(randmove)
+    randmove=false;
+end
+if randmove
+    movefunction='moverand';
+else
+    movefunction='move';
 end
 
 %initialise variables and do symmetry check
@@ -182,7 +192,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         dstep=0;
         group_handler('assign',y);
         for i=myord(length(M(1)))
-            di=group_handler('move',i,M(i));
+            di=group_handler(movefunction,i,M(i));
             dstep=dstep+di;
         end
         
@@ -247,7 +257,7 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         dstep=0;
         group_handler('assign',y);
         for i = myord(length(M))
-            di=group_handler('move',i,M(:,i));
+            di=group_handler(movefunction,i,M(:,i));
             dstep=dstep+di;
         end
         dtot=dtot+dstep;
