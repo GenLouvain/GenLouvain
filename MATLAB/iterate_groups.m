@@ -13,7 +13,7 @@ else
 end
 
 parfor i=1:iter
-        [Sprem,Qprem]=genlouvain(B,7000,1);
+        [Sprem,Qprem]=genlouvain(B,7000,1,1,1);
    
    Sdist(:,i)=Sprem;
    Qdist(i)=Qprem/twom;
