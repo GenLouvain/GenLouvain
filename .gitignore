@@ -5,3 +5,4 @@ MEX/genlouvain_mex.xcodeproj/xcuserdata
 MEX/group_handler.mexmaci64.dSYM
 MEX/metanetwork_reduce.mexmaci64.dSYM
 *.mexa64
+*.zip
