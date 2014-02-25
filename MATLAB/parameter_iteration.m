@@ -16,7 +16,7 @@ T=1;
 parfor i=1:iter
     
     [B,twom]=feval(wrapper,A,param(i));
-    [Spar{i},Qpar(i)]=genlouvain(B);
+    [Spar{i},Qpar(i)]=genlouvain(B,[],[],1,1);
     Qpar(i)=Qpar(i)/twom;
     n=size(Spar{i},1);
     Spar{i}=reshape(Spar{i},n/T,T);
