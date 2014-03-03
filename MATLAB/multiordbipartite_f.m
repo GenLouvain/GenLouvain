@@ -1,4 +1,4 @@
-function [B,twom] = multiordbipartite_f(A,omega,gamma)
+function [B,twom] = multiordbipartite_f(A,gamma,omega)
 %MULTIORD  Multislice bipartite community detection for ordered slices, function
 %version
 %   Version 1.0, August 26, 2011.
@@ -69,8 +69,12 @@ function [B,twom] = multiordbipartite_f(A,omega,gamma)
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
 
-if nargin<3
+if nargin<2
 	gamma=1;
+end
+
+if nargin<3
+	omega=1;
 end
 
 

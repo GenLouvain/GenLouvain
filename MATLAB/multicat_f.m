@@ -1,4 +1,4 @@
-function [B] = multiordf(A,gamma,omega)
+function [B,twom] = multicat_f(A,gamma,omega)
 %MULTIORD  Multislice community detection for ordered slices, matrix version
 %   Version 0.99, August 26, 2011.
 %
@@ -17,7 +17,7 @@ function [B] = multiordf(A,gamma,omega)
 %   followed by slices [corresponding to S(:) reordering].
 %
 %   See also
-%       multislice wrappers:        MULTIORDF, MULTICAT, MULTICATF
+%       multislice wrappers:        MULTICAT, MULTIORD, MULTIORDF
 %       other heuristics:           SPECTRAL23
 %       Kernighan-Lin improvement:  KLNB
 %
@@ -26,7 +26,7 @@ function [B] = multiordf(A,gamma,omega)
 %     and of equal size.  These assumptions are not checked here.
 %
 %     For smaller systems, it is potentially more efficient (and easier) to
-%     directly use the sparse quality/modularity matrix B, as in MULTIORD.
+%     directly use the sparse quality/modularity matrix B, as in MULTICAT.
 %
 %     This code serves as a template and can be modified for situations
 %     with other wrinkles (e.g., different intraslice null models,
@@ -79,22 +79,11 @@ function [B] = multiordf(A,gamma,omega)
 %       Inderjit S. Jutla and Peter J. Mucha, "A generalized Louvain method
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
-if nargin<2
-    gamma=1;
-end
-
-if nargin<3
-    omega=1;
-end
 
 N=length(A{1});
 T=length(A);
-
-if length(gamma)==1
-    gamma=repmat(gamma,T,1);
-end
-
 ii=[]; jj=[]; vv=[];
+twom=0;
 for s=1:T
     indx=[1:N]'+(s-1)*N;
     [i,j,v]=find(A{s});
@@ -103,11 +92,13 @@ for s=1:T
     kv=zeros(N*T,1);
     kv(indx)=k/sum(k);
     kcell{s}=kv;
+    twom=twom+sum(k);
 end
 AA = sparse(ii,jj,vv,N*T,N*T);
 clear ii jj vv
 kvec = full(sum(AA));
-AA = AA + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
-B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*kcell{ceil(i/(N+eps))}*kvec(i);
-%[S,Q] = genlouvainrand(B);
-%S = reshape(S,N,T);
+all2all = N*[(-T+1):-1,1:(T-1)];
+AA = AA + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
+B = @(i) AA(:,i) - kcell{ceil(i/(N+eps))}*kvec(i);
+twom=twom+2*N*(T-1)*T*omega;
+end

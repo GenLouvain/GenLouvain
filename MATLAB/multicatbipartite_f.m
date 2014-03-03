@@ -1,13 +1,17 @@
-function [B,twom] = multicatbipartite_f(A,omega,gamma)
-%MULTIORDBIPARTITE [B,TWOM]=MULTICATBIPARTITE(A,gamma,omega)
+function [B,twom] = multicatbipartite_f(A,gamma,omega)
+%MULTICATBIPARTITE_F [B,TWOM]=MULTICATBIPARTITE_F(A,gamma,omega)
 %
 % Input: A: cell array of mxn bipartite adjacency matrices for each slice
 % of the network
 %        gamma: resolution parameter
 %        omega: interslice connection strength
 
-if nargin<3
+if nargin<2
     gamma=1;
+end
+
+if nargin<3
+	omega=1;
 end
 
 [m,n]=size(A{1});

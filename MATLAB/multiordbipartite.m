@@ -16,9 +16,6 @@ for s=1:T
     k=sum(A{s},2);
     d=sum(A{s});
     mm=sum(k);
-    if sum(d)~=mm
-        warning('multiordbipartite:edgeweights','edgeweights don''t agree, difference: %f',abs(m-sum(d)));
-    end
     
     if mm==0
         B1=sparse(m,n);

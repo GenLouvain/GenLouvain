@@ -1,5 +1,5 @@
-function [B,twom]=singlebipartite_f(A,gamma)
-%SINGLEBIPARTITE_f [B,twom]=SINGLEBIPARTITE_f(A,gamma)
+function [B,twom]=bipartite_f(A,gamma)
+%BIPARTITE_f [B,twom]=BIPARTITE_f(A,gamma)
 %
 % Input: A: MxN adjacency matrix an undirected bipartite network
 % gamma: resolution parameter

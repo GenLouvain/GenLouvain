@@ -1,12 +1,12 @@
-function [B,twom] = multicatbipartite(A,gamma,omega)
+function [B,twom] = multiord_f(A,gamma,omega)
 %MULTIORD  Multislice community detection for ordered slices, matrix version
 %   Version 0.99, August 26, 2011.
 %
-%   [S,Q] = MULTICAT(A,OMEGA) with A a cell array of square symmetric
+%   [S,Q] = MULTIORD(A,OMEGA) with A a cell array of square symmetric
 %   matrices of equal size each representing an undirected network "slice"
 %   performs multislice community detection using the quality function
 %   described in Mucha et al. 2010, with interslice coupling OMEGA
-%   connecting all-to-all categorical slices.  Optimization is performed
+%   connecting nearest-neighbor ordered slices.  Optimization is performed
 %   by the generalized Louvain code GENLOUVAINRAND by Jutla & Mucha
 %   (following from Blondel et al. 2008).  The output matrix S encodes the
 %   obtained community assignments, with S(i,s) identifying the community
@@ -17,7 +17,7 @@ function [B,twom] = multicatbipartite(A,gamma,omega)
 %   followed by slices [corresponding to S(:) reordering].
 %
 %   See also
-%       multislice wrappers:        MULTICATF, MULTIORD, MULTIORDF
+%       multislice wrappers:        MULTIORDF, MULTICAT, MULTICATF
 %       other heuristics:           SPECTRAL23
 %       Kernighan-Lin improvement:  KLNB
 %
@@ -25,9 +25,8 @@ function [B,twom] = multicatbipartite(A,gamma,omega)
 %     The matrices in the cell array A are assumed to be symmetric, square,
 %     and of equal size.  These assumptions are not checked here.
 %
-%     This code assumes that the sparse quality/modularity matrix B will
-%     fit in memory and proceeds to build that matrix.  For larger systems,
-%     try MULTICATF.
+%     For smaller systems, it is potentially more efficient (and easier) to
+%     directly use the sparse quality/modularity matrix B, as in MULTIORD.
 %
 %     This code serves as a template and can be modified for situations
 %     with other wrinkles (e.g., different intraslice null models,
@@ -43,7 +42,8 @@ function [B,twom] = multicatbipartite(A,gamma,omega)
 %
 %     The quality Q output here does not include the 1/(2*mu) prefactor.
 %
-%     Resolution parameters within each slice can be added in line 90.
+%     Resolution parameters within each slice can be included by
+%     modification of the kcell terms in line 92.
 %
 %     By using this code, the user implicitly acknowledges that the authors
 %     accept no liability associated with that use.  (What are you doing
@@ -79,31 +79,36 @@ function [B,twom] = multicatbipartite(A,gamma,omega)
 %       Inderjit S. Jutla and Peter J. Mucha, "A generalized Louvain method
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
-
-[m,n]=size(A{1});
-N=m+n;
-T=length(A);
-B=spalloc(N*T,N*T,2*m*n+N*T*(2*T-2));
-
-twom=0;
-for s=1:T
-    k=sum(A{s},2);
-    d=sum(A{s});
-    mm=sum(k);
-    
-    if mm==0
-        B1=sparse(m,n);
-    else
-        B1=A{s}-gamma*k*d/mm;
-    end
-    
-    indx=(s-1)*N;    
-    B(indx+1:indx+m,indx+m+1:indx+N)=B1;
-    B(indx+m+1:indx+N,indx+1:indx+m)=B1';
-    
-    twom=mm+twom;
+if nargin<2
+    gamma=1;
 end
-all2all = N*[(-T+1):-1,1:(T-1)];
-B = B + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
-twom = 2*twom+2*(T-1)*T*N*omega;
+
+if nargin<3
+    omega=1;
+end
+
+N=length(A{1});
+T=length(A);
+
+if length(gamma)==1
+    gamma=repmat(gamma,T,1);
+end
+
+ii=[]; jj=[]; vv=[];
+for s=1:T
+    indx=[1:N]'+(s-1)*N;
+    [i,j,v]=find(A{s});
+    ii=[ii;indx(i)]; jj=[jj;indx(j)]; vv=[vv;v];
+    k=sum(A{s});
+    kv=zeros(N*T,1);
+    kv(indx)=k/sum(k);
+    kcell{s}=kv;
+end
+AA = sparse(ii,jj,vv,N*T,N*T);
+clear ii jj vv
+kvec = full(sum(AA));
+AA = AA + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
+B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*kcell{ceil(i/(N+eps))}*kvec(i);
+twom=twom+2*N*T*omega;
+
 end

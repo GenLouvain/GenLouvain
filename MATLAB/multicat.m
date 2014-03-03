@@ -1,4 +1,4 @@
-function [B,twom] = multicat(A,omega,gamma)
+function [B,twom] = multicat(A,gamma,omega)
 %MULTIORD  Multislice community detection for ordered slices, matrix version
 %   Version 0.99, August 26, 2011.
 %
