@@ -16,6 +16,11 @@
 #include <cstring>
 #include <map>
 #include <set>
+#include <vector>
+#include <random>
+#include <ctime>
+#include <stdlib.h>
+
 
 
 //move node i to group with most improvement in modularity
