@@ -161,24 +161,31 @@
 		A034BDF516D558610056C382 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Debug;
 		};
 		A034BDF616D558610056C382 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
 				SDKROOT = macosx;
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Release;
 		};
@@ -187,6 +194,7 @@
 			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -194,9 +202,12 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_SUSPICIOUS_IMPLICIT_CONVERSION = YES;
 				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				"DEBUG_INFORMATION_FORMAT[sdk=macosx10.9]" = "";
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_EXTENSION = mexmaci64;
+				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -214,14 +225,15 @@
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
-				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Debug;
 		};
@@ -230,6 +242,7 @@
 			baseConfigurationReference = A034BDFE16D558830056C382 /* mex.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++11";
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
@@ -240,6 +253,8 @@
 				DYLIB_COMPATIBILITY_VERSION = "";
 				DYLIB_CURRENT_VERSION = "";
 				EXECUTABLE_EXTENSION = mexmaci64;
+				GCC_CHAR_IS_UNSIGNED_CHAR = YES;
+				GCC_OPTIMIZATION_LEVEL = 3;
 				GCC_TREAT_IMPLICIT_FUNCTION_DECLARATIONS_AS_ERRORS = YES;
 				GCC_TREAT_INCOMPATIBLE_POINTER_TYPE_WARNINGS_AS_ERRORS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -256,15 +271,16 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
+				LLVM_LTO = YES;
 				MACH_O_TYPE = mh_bundle;
-				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Release;
 		};
@@ -280,14 +296,14 @@
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
-				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Debug;
 		};
@@ -303,14 +319,14 @@
 				HEADER_SEARCH_PATHS = "$(MATLABROOT)/extern/include";
 				LIBRARY_SEARCH_PATHS = "$(MATLABROOT)/bin/maci64";
 				MACH_O_TYPE = mh_bundle;
-				OBJROOT = "$(SYMROOT)/build/$(CONFIGURATION)";
+				OBJROOT = "$(SRCROOT)/build/$(CONFIGURATION)";
 				OTHER_LDFLAGS = (
 					"-lmx",
 					"-lmex",
 					"-lmat",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SYMROOT = "$(SRCROOT)";
+				SYMROOT = "$(SRCROOT)/../private";
 			};
 			name = Release;
 		};

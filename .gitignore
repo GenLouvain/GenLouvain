@@ -1,8 +1,12 @@
 *.mexmaci64
-MEX/build
-MEX/genlouvain_mex.xcodeproj/project.xcworkspace
-MEX/genlouvain_mex.xcodeproj/xcuserdata
-MEX/group_handler.mexmaci64.dSYM
-MEX/metanetwork_reduce.mexmaci64.dSYM
+MEX_SRC/build
+MEX_SRC/genlouvain_mex.xcodeproj/project.xcworkspace
+MEX_SRC/genlouvain_mex.xcodeproj/xcuserdata
+*.dSYM
 *.mexa64
 *.zip
+Bipartite
+Info.plist
+*.d
+*.dia
+*.o

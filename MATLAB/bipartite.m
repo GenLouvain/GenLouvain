@@ -4,19 +4,20 @@ function [B,twom] = bipartite(A,gamma)
 % Input: A: MxN adjacency matrix for an undirected bipartite network
 %        gamma: resolution parameter
 
-[M,N]=size(A);
+[m,n]=size(A);
+N=m+n;
 
 k=sum(A,2);
-d=sum(A);
-m=sum(k);
+d=sum(A,1);
+mm=sum(k);
 
-B1=A-gamma*k*d/m;
+B1=A-gamma*k*d/mm;
 
-B=sparse(M+N,M+N);
-B(1:M,M+1:M+N)=B1;
-B(M+1:M+N,1:M)=B1';
+B=sparse(N,N);
+B(1:m,m+1:N)=B1;
+B(m+1:N,1:m)=B1';
 
-twom=2*m;
+twom=2*mm;
 
 end
 
