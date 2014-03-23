@@ -8,7 +8,7 @@
 //
 //  [output]=group_handler('function_handle',input)
 //
-//  implemented functions are 'assign', 'move', 'return'
+//  implemented functions are 'assign', 'move', 'moverand', 'return'
 //
 //      assign: takes a group vector as input and uses it to initialise the "group_index"
 //
@@ -22,7 +22,7 @@
 //              returns improvement if given an output argument
 //
 //
-//      move:   takes a node index and the corresponding column of the modularity matrix as
+//      moverand:   takes a node index and the corresponding column of the modularity matrix as
 //              input
 //
 //              moves node to random group with improvement in modularity (stays in same group
