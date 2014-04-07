@@ -23,9 +23,9 @@
 		A034BE0416D5588F0056C382 /* metanetwork_reduce.mexmaci64 */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = metanetwork_reduce.mexmaci64; sourceTree = BUILT_PRODUCTS_DIR; };
 		A034BE0A16D5592A0056C382 /* group_handler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = group_handler.cpp; sourceTree = "<group>"; };
 		A034BE0B16D5592A0056C382 /* group_handler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = group_handler.h; sourceTree = "<group>"; };
-		A034BE0D16D559450056C382 /* full.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = full.cpp; sourceTree = "<group>"; };
-		A034BE0E16D559450056C382 /* matlab_matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = matlab_matrix.h; sourceTree = "<group>"; };
-		A034BE0F16D559450056C382 /* sparse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sparse.cpp; sourceTree = "<group>"; };
+		A034BE0D16D559450056C382 /* full.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = full.cpp; path = matlab_matrix/full.cpp; sourceTree = "<group>"; };
+		A034BE0E16D559450056C382 /* matlab_matrix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = matlab_matrix.h; path = matlab_matrix/matlab_matrix.h; sourceTree = "<group>"; };
+		A034BE0F16D559450056C382 /* sparse.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = sparse.cpp; path = matlab_matrix/sparse.cpp; sourceTree = "<group>"; };
 		A034BE1416D5595E0056C382 /* group_index.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = group_index.cpp; sourceTree = "<group>"; };
 		A034BE1516D5595E0056C382 /* group_index.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = group_index.h; sourceTree = "<group>"; };
 		A034BE1A16D559D20056C382 /* metanetwork_reduce.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = metanetwork_reduce.cpp; sourceTree = "<group>"; };
