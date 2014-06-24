@@ -139,7 +139,7 @@ end
 
 %set move function (maximal (original Louvain) or random improvement)
 if nargin<5||isempty(randmove)
-    randmove=false;
+    randmove=true;
 end
 if randmove
     movefunction='moverand';
