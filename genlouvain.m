@@ -1,8 +1,8 @@
 function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
-%GENLOUVAINMEX  Louvain-like community detection, specified quality function.
-%   Version 1.2 (July 2012)
+%GENLOUVAIN  Louvain-like community detection, specified quality function.
+%   Version 2.0 (July 2014)
 %
-%   [S,Q] = GENLOUVAINMEX(B) with matrix B implements a Louvain-like greedy
+%   [S,Q] = GENLOUVAIN(B) with matrix B implements a Louvain-like greedy
 %   community detection method using the modularity/quality matrix B that
 %   encodes the quality function Q, defined by summing over all elements
 %   B(i,j) such that nodes i and j are placed in the same community.
@@ -15,23 +15,31 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %   node i has been assigned.  The output Q gives the quality of the
 %   resulting partition of the network.
 %
-%   [S,Q] = GENLOUVAINMEX(B) with function handle B such that B(i) returns
+%   [S,Q] = GENLOUVAIN(B) with function handle B such that B(i) returns
 %   the ith column of the modularity/quality matrix uses this function
 %   handle (to reduce the memory footprint for large networks) until the
 %   number of groups is less than 10000 and then builds the B matrix
 %   corresponding to the new aggregated network in subsequent passes.  Use
-%   [S,Q] = GENLOUVAINMEX(B,limit) to change this default=10000 limit.
+%   [S,Q] = GENLOUVAIN(B,limit) to change this default=10000 limit.
 %
-%   [S,Q] = GENLOUVAINMEX(B,limit,0) suppresses displayed text output.
+%   [S,Q] = GENLOUVAIN(B,limit,0) suppresses displayed text output.
 %
-%   [S,Q] = GENLOUVAINMEX(B,limit,verbose,0) forces index-ordered (cf.
+%   [S,Q] = GENLOUVAIN(B,limit,verbose,0) forces index-ordered (cf.
 %   randperm-ordered) consideration of nodes, for deterministic results.
+%
+%   [S,Q]=GENLOUVAIN(B,limit,verbose,1,1) enables additional randomization 
+%   to obtain a broader sample of the quality function landscape and mitigates
+%   some undesirable behavior for "multislice" modularity with large values
+%   for the interslice coupling. With 'randmove' enabled, the algorithm 
+%   moves the node under consideration to a community chosen uniformly at
+%   random from all moves that increase the qualtiy function, instead of 
+%   choosing the move that maximally increases the quality function.
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
 %         twom = sum(k); 
 %         B = @(v) A(:,v) - k'*k(v)/twom;
-%         [S,Q] = genlouvainmex(B); 
+%         [S,Q] = genlouvain(B); 
 %         Q = Q/twom;
 %     finds community assignments for the undirected network encoded by the
 %     symmetric adjacency matrix A.  For small networks, one may obtain
@@ -55,7 +63,7 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %     results of repeated applications of this code (and, if possible, of
 %     other computational heuristics).  To force deterministic behavior,
 %     ordering nodes by their index, pass zero as the fourth input:
-%     GENLOUVAINMEX(B,limit,verbose,0).
+%     GENLOUVAIN(B,limit,verbose,0).
 %
 %     This algorithm is only "Louvain-like" in the sense that the two
 %     phases are used iteratively in the same manner as in the Louvain
