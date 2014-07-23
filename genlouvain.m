@@ -147,7 +147,7 @@ end
 
 %set move function (maximal (original Louvain) or random improvement)
 if nargin<5||isempty(randmove)
-    randmove=true;
+    randmove=false;
 end
 if randmove
     movefunction='moverand';
@@ -289,14 +289,10 @@ end
 %-----%
 function M = metanetwork(J,S)
 %Computes new aggregated network (communities --> nodes)
-if(issparse(J))
-    m=max(S);
-    [i,j,v]=find(J);
-    M = sparse(S(i),S(j),v,m,m);
-else
     PP = sparse(1:length(S),S,1);
     M = PP'*J*PP;
-end
+    M=full(M);
+
 
 %-----%
 function Mi = metanetwork_i(J,t,i) 
