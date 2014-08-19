@@ -106,6 +106,6 @@ for s=1:T
 end
 all2all = N*[(-T+1):-1,1:(T-1)];
 B = B + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
-twom=twomt + (N*T*(2*T-2));
+twom=twomt + (N*T*(T-1)*omega);
 % [S,Q] = genlouvainrand(B);
 % S = reshape(S,N,T);

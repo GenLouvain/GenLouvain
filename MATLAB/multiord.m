@@ -105,5 +105,5 @@ for s=1:T
     B(indx,indx)=A{s}-gamma(s).*(k'*k/twom);
 end
 B = B + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
-mm=mm+2*N*T*omega;
+mm=mm+2*N*(T-1)*omega;
 
