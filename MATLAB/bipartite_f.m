@@ -2,7 +2,14 @@ function [B,twom]=bipartite_f(A,gamma)
 %BIPARTITE_f [B,twom]=BIPARTITE_f(A,gamma)
 %
 % Input: A: MxN adjacency matrix for an undirected bipartite network
-% gamma: resolution parameter
+%        gamma: resolution parameter
+%
+% Output: B: function handle such that B(i) returns the ith column of the
+%            modularity matrix
+%         twom: normalisation constant
+%
+% Lucas Jeub
+% jeub@maths.ox.ac.uk
 
 [m,n]=size(A);
 N=m+n;

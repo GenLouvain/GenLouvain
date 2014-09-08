@@ -3,6 +3,12 @@ function [B,twom] = bipartite(A,gamma)
 %
 % Input: A: MxN adjacency matrix for an undirected bipartite network
 %        gamma: resolution parameter
+%
+% Output: B: (M+N)x(M+N) modularity matrix
+%         twom: normalisation constant
+%
+% Lucas Jeub
+% jeub@maths.ox.ac.uk
 
 [m,n]=size(A);
 N=m+n;
