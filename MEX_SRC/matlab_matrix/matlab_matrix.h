@@ -7,7 +7,7 @@
 //  Implements thin wrapper classes for full and sparse matlab matrices
 //
 //
-//  Last modified by Lucas Jeub on 27/11/2012
+//  Last modified by Lucas Jeub on 25/07/2014
 
 
 
@@ -23,7 +23,10 @@
 #include <limits>
 
 #include "mex.h"
-#include "matrix.h"
+
+#ifndef OCTAVE
+    #include "matrix.h"
+#endif
 
 struct full;
 

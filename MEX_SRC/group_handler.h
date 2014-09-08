@@ -4,13 +4,17 @@
 //
 //  Created by Lucas Jeub on 21/11/2012.
 //
-//  Last modified by Lucas Jeub on 27/11/2012
+//  Last modified by Lucas Jeub on 25/07/2014
 
 #ifndef __group_handler__group_handler__
 #define __group_handler__group_handler__
 
 #include "mex.h"
-#include "matrix.h"
+
+#ifndef OCTAVE
+    #include "matrix.h"
+#endif
+
 #include "matlab_matrix.h"
 #include "group_index.h"
 #include <cstring>

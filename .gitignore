@@ -10,3 +10,5 @@ Info.plist
 *.d
 *.dia
 *.o
+*.mex
+private

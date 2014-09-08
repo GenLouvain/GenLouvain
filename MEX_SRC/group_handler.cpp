@@ -35,8 +35,7 @@
 //              e.g. S = [1 2 1 3] rather than S = [2 4 2 6]
 //
 //
-//  Last modified by Lucas Jeub on 27/11/2012
-
+//  Last modified by Lucas Jeub on 23/03/2014
 
 
 

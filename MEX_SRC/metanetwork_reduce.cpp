@@ -23,15 +23,20 @@
 //      nodes: takes a group and returns the matlab index of all nodes in this group
 //
 //
-//  Last modified by Lucas Jeub on 27/11/2012
+//  Last modified by Lucas Jeub on 25/07/2014
 
 
 #include "mex.h"
-#include "matrix.h"
+
+
 #include "matlab_matrix.h"
 #include "group_index.h"
 #include <map>
 #include <cstring>
+
+#ifndef OCTAVE
+    #include "matrix.h"
+#endif
 
 using namespace std;
 static group_index group;

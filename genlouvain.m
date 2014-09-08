@@ -27,13 +27,16 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,0) forces index-ordered (cf.
 %   randperm-ordered) consideration of nodes, for deterministic results.
 %
-%   [S,Q]=GENLOUVAIN(B,limit,verbose,1,1) enables additional randomization 
-%   to obtain a broader sample of the quality function landscape and mitigates
-%   some undesirable behavior for "multislice" modularity with large values
-%   for the interslice coupling. With 'randmove' enabled, the algorithm 
-%   moves the node under consideration to a community chosen uniformly at
-%   random from all moves that increase the qualtiy function, instead of 
-%   choosing the move that maximally increases the quality function.
+%   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,1) enables additional 
+%   randomization to obtain a broader sample of the quality function landscape 
+%   and mitigates some undesirable behavior for "multislice" modularity with 
+%   ordinal coupling. Without 'randmove' enabled, the algorithm exhibits an 
+%   abrupt change in behavior when the strength of the interslice coupling 
+%   approaches the maximum value of the intraslice modularity matrices. With 
+%   'randmove' enabled, the algorithm moves the node under consideration to a 
+%   community chosen uniformly at random from all moves that increase the 
+%   quality function, instead of choosing the move that maximally increases the 
+%   quality function.
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
@@ -111,14 +114,17 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %
 %   Acknowledgments:
 %     A special thank you to Stephen Reid, whose greedy.m code was the
-%     original version that has over time developed into the present code.
+%     original version that has over time developed into the present code, 
+%     and Marya Bazzi for noticing the problematic behavior of genlouvain for
+%     ordinal interslice coupling and contributing code that developed into the 
+%     'randmove' option.
 %     Thank you also to Dani Bassett, Jesse Blocher, Mason Porter and Simi
 %     Wang for inspiring improvements to the code.
 %
 %   Citation: If you use this code, please cite as
 %        Inderjit S. Jutla, Lucas G. S. Jeub, and Peter J. Mucha,
 %        "A generalized Louvain method for community detection implemented
-%        in MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2011-2012).
+%        in MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2011-2014).
 
 %set default for maximum size of modularity matrix
 if nargin<2||isempty(limit)

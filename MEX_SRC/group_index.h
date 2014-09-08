@@ -21,7 +21,7 @@
 //      export_matlab(matlab_array): output group vector to matlab_a
 //
 //
-//  Last modified by Lucas Jeub on 20/02/2012
+//  Last modified by Lucas Jeub on 25/07/2014
 
 #ifndef GROUP_INDEX_H
 #define GROUP_INDEX_H
@@ -32,7 +32,11 @@
 
 //interface with matlab
 #include "mex.h"
-#include "matrix.h"
+
+#ifndef OCTAVE
+    #include "matrix.h"
+#endif
+
 #include "matlab_matrix.h"
 
 
