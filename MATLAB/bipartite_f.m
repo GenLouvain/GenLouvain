@@ -5,8 +5,14 @@ function [B,twom]=bipartite_f(A,gamma)
 %        gamma: resolution parameter
 %
 % Output: B: function handle such that B(i) returns the ith column of the
-%            modularity matrix
+%            modularity matrix using the bipartite null-model
+%            of "Barber, M. Modularity and community detection in bipartite networks. 
+%            Phys. Rev. E 76, 066102 (2007)".
 %         twom: normalisation constant
+%
+% Usage: [B,twom]=bipartite(A,gamma);
+%        [S,Q]=genlouvain(B);
+%        Q=Q/twom;
 %
 % Lucas Jeub
 % jeub@maths.ox.ac.uk

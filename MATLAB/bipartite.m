@@ -4,8 +4,14 @@ function [B,twom] = bipartite(A,gamma)
 % Input: A: MxN adjacency matrix for an undirected bipartite network
 %        gamma: resolution parameter
 %
-% Output: B: (M+N)x(M+N) modularity matrix
+% Output: B: (M+N)x(M+N) modularity matrix using the bipartite null-model
+%            of "Barber, M. Modularity and community detection in bipartite networks. 
+%            Phys. Rev. E 76, 066102 (2007)".
 %         twom: normalisation constant
+% 
+% Usage: [B,twom]=bipartite(A,gamma);
+%        [S,Q]=genlouvain(B);
+%        Q=Q/twom;
 %
 % Lucas Jeub
 % jeub@maths.ox.ac.uk
