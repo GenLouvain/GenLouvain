@@ -5,13 +5,13 @@ function [ Spar, Qpar ] = parameter_iteration( wrapper,A,param )
 %in vector param
 
 iter=length(param);
-% if iscell(A)
-%     T=length(A);
-% else
-%     T=1;
-% end
+if iscell(A)
+    T=length(A);
+else
+    T=1;
+end
 % 
-T=1;
+%T=1;
 
 parfor i=1:iter
     
