@@ -1,4 +1,4 @@
-function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
+function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
 %   Version 2.0 (July 2014)
 %
@@ -27,22 +27,22 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,0) forces index-ordered (cf.
 %   randperm-ordered) consideration of nodes, for deterministic results.
 %
-%   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,1) enables additional 
-%   randomization to obtain a broader sample of the quality function landscape 
-%   and mitigates some undesirable behavior for "multislice" modularity with 
-%   ordinal coupling. Without 'randmove' enabled, the algorithm exhibits an 
-%   abrupt change in behavior when the strength of the interslice coupling 
-%   approaches the maximum value of the intraslice modularity matrices. With 
-%   'randmove' enabled, the algorithm moves the node under consideration to a 
-%   community chosen uniformly at random from all moves that increase the 
-%   quality function, instead of choosing the move that maximally increases the 
+%   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,1) enables additional
+%   randomization to obtain a broader sample of the quality function landscape
+%   and mitigates some undesirable behavior for "multislice" modularity with
+%   ordinal coupling. Without 'randmove' enabled, the algorithm exhibits an
+%   abrupt change in behavior when the strength of the interslice coupling
+%   approaches the maximum value of the intraslice modularity matrices. With
+%   'randmove' enabled, the algorithm moves the node under consideration to a
+%   community chosen uniformly at random from all moves that increase the
+%   quality function, instead of choosing the move that maximally increases the
 %   quality function.
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
-%         twom = sum(k); 
+%         twom = sum(k);
 %         B = @(v) A(:,v) - k'*k(v)/twom;
-%         [S,Q] = genlouvain(B); 
+%         [S,Q] = genlouvain(B);
 %         Q = Q/twom;
 %     finds community assignments for the undirected network encoded by the
 %     symmetric adjacency matrix A.  For small networks, one may obtain
@@ -114,9 +114,9 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove)
 %
 %   Acknowledgments:
 %     A special thank you to Stephen Reid, whose greedy.m code was the
-%     original version that has over time developed into the present code, 
+%     original version that has over time developed into the present code,
 %     and Marya Bazzi for noticing the problematic behavior of genlouvain for
-%     ordinal interslice coupling and contributing code that developed into the 
+%     ordinal interslice coupling and contributing code that developed into the
 %     'randmove' option.
 %     Thank you also to Dani Bassett, Jesse Blocher, Mason Porter and Simi
 %     Wang for inspiring improvements to the code.
@@ -161,10 +161,26 @@ else
     movefunction='move';
 end
 
+% set initial partition
+if nargin<6
+    S0=[];
+end
+
 %initialise variables and do symmetry check
 if isa(B,'function_handle')
     n=length(B(1));
     S=(1:n)';
+    if isempty(S0)
+        S0=(1:n)';
+    else
+        if numel(S0)==n
+            group_handler('assign',S0);
+            S0=group_handler('return'); % tidy config
+        else
+            error('Initial partition does not have the right size for the modularity matrix')
+        end
+    end
+    
     M=B;
     it(:,1)=M(1);
     ii=find(it(2:end)>0,3)+1;
@@ -178,7 +194,19 @@ if isa(B,'function_handle')
     end
 else
     n = length(B);
+    
     S = (1:n)';
+    if isempty(S0)
+        S0=(1:n)';
+    else
+        if numel(S0)==n
+            % clean input partition
+            group_handler('assign',S0);
+            S0=group_handler('return');
+        else
+            error('Initial partition does not have the right size for the modularity matrix');
+        end
+    end
     
     if nnz(B-B'),
         B=(B+B')/2; disp('WARNING: Forced symmetric B matrix')
@@ -187,15 +215,15 @@ else
 end
 
 dtot=0; %keeps track of total change in modularity
-
+y = S0;
 %Run using function handle, if provided
 while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle
-      
-    y = unique(S);  %unique also puts elements in ascending order
     
-    Sb=S;  
     
-   
+    
+    Sb=S;
+    
+    
     clocktime=clock;
     mydisp(['Merging ',num2str(length(y)),' communities  ',num2str(clocktime(4:6))]);
     
@@ -212,15 +240,17 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         
         dtot=dtot+dstep;
         y=group_handler('return');
-        mydisp([num2str(length(unique(y))),' change: ',num2str(dstep),...
+        mydisp([num2str(max(y)),' change: ',num2str(dstep),...
             ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
-    
+        
     end
     
     %group_handler implements tidyconfig
     for i=1:length(y)
         S(S==i)=y(i);
     end
+    
+    y = unique(y);  %unique also puts elements in ascending order
     
     %calculate modularity and return if converged
     if isequal(Sb,S)
@@ -232,11 +262,11 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         return
     end
     
-    %check wether #groups < limit 
+    %check wether #groups < limit
     t = length(unique(S));
     if (t>limit)
-       metanetwork_reduce('assign',S); %inputs group information to metanetwork_reduce
-       M=@(i) metanetwork_i(B,t,i); %use function handle if #groups>limit 
+        metanetwork_reduce('assign',S); %inputs group information to metanetwork_reduce
+        M=@(i) metanetwork_i(B,t,i); %use function handle if #groups>limit
     else
         metanetwork_reduce('assign',S);
         J = zeros(t);   %convert to matrix if #groups small enough
@@ -248,18 +278,20 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     end
     
 end
-    
 
 S2 = (1:length(B))';
+
+
 Sb = [];
+
 while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) with B matrix
     
-    y = unique(S2);  %unique also puts elements in ascending order
+    
     Sb = S2;
-
+    
     clocktime=clock;
-    mydisp(['Merging ',num2str(length(y)),' communities  ',num2str(clocktime(4:6))]);
-
+    mydisp(['Merging ',num2str(max(y)),' communities  ',datestr(clocktime)]);
+    
     yb = [];
     
     dstep=1;
@@ -283,38 +315,42 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         S2(S2==i) = y(i);
     end
     
+    
     if isequal(Sb,S2)
-    	P=sparse(y,1:length(y),1);
-    	Q=sum(sum((P*M).*P));
-    	return
+        P=sparse(y,1:length(y),1);
+        Q=sum(sum((P*M).*P));
+        return
     end
-   
-    M = metanetwork(B,S2);    
+    
+    M = metanetwork(B,S2);
+    y = unique(S2);  %unique also puts elements in ascending order
+end
+
 end
 
 %-----%
 function M = metanetwork(J,S)
 %Computes new aggregated network (communities --> nodes)
-    PP = sparse(1:length(S),S,1);
-    M = PP'*J*PP;
-    M=full(M);
-
+PP = sparse(1:length(S),S,1);
+M = PP'*J*PP;
+M=full(M);
+end
 
 %-----%
-function Mi = metanetwork_i(J,t,i) 
+function Mi = metanetwork_i(J,t,i)
 %ith column of metanetwork (used to create function handle)
 %J is a function handle
-  Mi=zeros(t,1);
-  ind=metanetwork_reduce('nodes',i);
-  for j=ind
-      Jj=J(j);
-      P=metanetwork_reduce('reduce',Jj);
-      Mi=Mi+P;
-  end
-   
+Mi=zeros(t,1);
+ind=metanetwork_reduce('nodes',i);
+for j=ind
+    Jj=J(j);
+    P=metanetwork_reduce('reduce',Jj);
+    Mi=Mi+P;
+end
+end
 
 
-    
-        
-    
+
+
+
 
