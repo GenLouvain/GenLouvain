@@ -7,7 +7,7 @@
 //  Implements thin wrapper class for sparse matlab matrices
 //
 //
-//  Last modified by Lucas Jeub on 27/11/2012
+//  Last modified by Lucas Jeub on 18/11/2014
 
 
 #include "matlab_matrix.h"
@@ -306,7 +306,8 @@ sparse sparse::operator / (const sparse &B){
     //create output matrix
 	sparse C(m, n, nmax);
 	
-    mwIndex j,k;
+    mwIndex k;
+    mwIndex j=0;
     
     //loop over columns
 	for(mwIndex i=0; i<n; i++){
