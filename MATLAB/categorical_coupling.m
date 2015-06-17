@@ -7,6 +7,6 @@ T=length(B);
 N=length(B{1});
 all2all = N*[(-T+1):-1,1:(T-1)];
 
-B=blkdiag(B{:})+omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
+B=spblkdiag(B{:})+omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
 
 end
