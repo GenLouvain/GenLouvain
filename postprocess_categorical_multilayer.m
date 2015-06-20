@@ -1,4 +1,4 @@
-function S=postprocess_categorical_multilayer(S,T,max_coms)
+function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
 
 % post-process an NxT multilayer partition S with N nodes and T layers to
 % maximise multiplex persistence without changing the community structure 
@@ -20,6 +20,16 @@ N=numel(S)/T;
 
 if nargin<3||isempty(max_coms)
     max_coms=inf;
+end
+
+if nargin<4||isempty(verbose)
+    verbose=false;
+end
+
+if verbose
+    mydisp=@(s) disp(s);
+else
+    mydisp=@(s) [];
 end
 
 [N0,T0]=size(S);
@@ -71,7 +81,7 @@ while (p1-p0)>0
     
     p1=multiplex_persistence(S_new);
     
-    fprintf('improvement found: %g\n',p1-p0);
+    mydisp(sprintf('improvement found: %g',p1-p0));
 end
 
 % return in original format
