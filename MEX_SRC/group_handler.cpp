@@ -41,6 +41,7 @@
 
 #include "group_handler.h"
 
+
 using namespace std;
 
 static group_index group;
@@ -113,7 +114,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
     set<mwIndex> unique_groups;
     unique_groups.insert(g.nodes[node]);
     
-    unordered_map<mwIndex, double> mod_c;
+    map_type mod_c;
     
     if (mxIsSparse(mod)) {
         sparse mod_s(mod);
@@ -169,7 +170,7 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
     set<mwIndex> unique_groups;
     unique_groups.insert(g.nodes[node]);
     
-    unordered_map<mwIndex, double> mod_c;
+    map_type mod_c;
     
     if (mxIsSparse(mod)) {
         sparse mod_s(mod);
@@ -236,12 +237,13 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 }
 
 //calculates changes in modularity for full modularity matrix
-unordered_map<mwIndex, double> mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mwIndex current_node){
+map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mwIndex current_node){
     mwIndex current_group=g.nodes[current_node];
-    unordered_map<mwIndex,double> mod_c;
+    map_type mod_c(g.n_groups);
     double mod_current= mod.get(current_node);
     
     for (set<mwIndex>::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
+        mod_c[*it1]=0;
         for(list<mwIndex>::iterator it2=g.groups[*it1].begin(); it2!=g.groups[*it1].end(); it2++){
             mod_c[*it1]+=mod.get(*it2);
         }
@@ -259,10 +261,10 @@ unordered_map<mwIndex, double> mod_change(group_index &g, full & mod, set<mwInde
 
 
 //calculates changes in modularity for sparse modularity matrix
-unordered_map<mwIndex,double> mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, mwIndex current_node){
+map_type mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, mwIndex current_node){
     
     mwIndex current_group=g.nodes[current_node];
-    unordered_map<mwIndex,double> mod_c;
+    map_type mod_c(g.n_groups);
     double mod_current=mod.get(current_node, 0);
     
     for(set<mwIndex>::iterator it=unique_groups.begin(); it!=unique_groups.end();it++){
