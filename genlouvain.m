@@ -1,4 +1,4 @@
-function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
+function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
 %   Version 2.0 (July 2014)
 %
@@ -37,6 +37,15 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   community chosen uniformly at random from all moves that increase the
 %   quality function, instead of choosing the move that maximally increases the
 %   quality function.
+%
+%   [S,Q] = GENLOUVAIN(B,limit,verbose,randord,randmove,S0) uses S0 as an
+%   inital partition.
+%
+%   [S,Q] = GENLOUVAIN(B,limit,verbose,randord,randmove,S0,postprocessor),
+%   where postprocessor is a function handle pointing to a function of the
+%   form [S1]=postprocessor(S0), where S1 is a community structure with
+%   higher modularity. postprocessor is called during the first pass
+%   through the first phase of the Louvain algorithm.
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
@@ -162,8 +171,14 @@ else
 end
 
 % set initial partition
-if nargin<6
+if nargin<6||isempty(S0)
     S0=[];
+end
+
+% set postprocessing function
+if nargin<7||isempty(postprocessor)
+    % default: do not do anything
+    postprocessor=@(S) S;
 end
 
 %initialise variables and do symmetry check
@@ -242,8 +257,13 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         y=group_handler('return');
         mydisp([num2str(max(y)),' change: ',num2str(dstep),...
             ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
+        if numel(y)==numel(S)
+            y=postprocessor(y);
+        end
         
     end
+    
+    
     
     %group_handler implements tidyconfig
     for i=1:length(y)
@@ -308,6 +328,10 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         end
         dtot=dtot+dstep;
         y=group_handler('return');
+        
+         if numel(y)==numel(S)
+            y=postprocessor(y);
+        end
     end
     
     for i = 1:length(y)
