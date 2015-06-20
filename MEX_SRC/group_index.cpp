@@ -104,8 +104,6 @@ full group_index::index(mwIndex group){
 void group_index::move(mwIndex node, mwIndex group){
     //move node by splicing into list for new group
 	groups[group].splice(groups[group].end(), groups[nodes[node]],nodes_iterator[node]);
-    //update its position
-	nodes_iterator[node]= --groups[group].end();
     //update its group asignment
 	nodes[node]=group;
 }

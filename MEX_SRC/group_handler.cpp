@@ -243,10 +243,11 @@ map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mw
     double mod_current= mod.get(current_node);
     
     for (set<mwIndex>::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
-        mod_c[*it1]=0;
+        double mod_c_group=0;
         for(list<mwIndex>::iterator it2=g.groups[*it1].begin(); it2!=g.groups[*it1].end(); it2++){
-            mod_c[*it1]+=mod.get(*it2);
+            mod_c_group+=mod.get(*it2);
         }
+        mod_c[*it1]=mod_c_group;
     }
     
     mod_c[current_group]-=mod_current;
