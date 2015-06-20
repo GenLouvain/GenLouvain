@@ -79,6 +79,16 @@ function [B,twom] = multicat(A,gamma,omega)
 %       Inderjit S. Jutla and Peter J. Mucha, "A generalized Louvain method
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
+if nargin<2||isempty(gamma)
+    gamma=1;
+end
+
+if nargin<3||isempty(omega)
+    omega=1;
+end
+
+
+
 if length(gamma)==1
     g=@(i) gamma;
 else
