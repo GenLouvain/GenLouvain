@@ -18,11 +18,12 @@
 #include "matlab_matrix.h"
 #include "group_index.h"
 #include <cstring>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <vector>
 #include <random>
 #include <ctime>
+
 
 
 
@@ -33,9 +34,9 @@ double move(group_index & g, mwIndex node, const mxArray * mod);
 //move node i to random group that increases modularity
 double moverand(group_index & g, mwIndex node, const mxArray * mod);
 
-std::map<mwIndex,double> mod_change(group_index &g, sparse &mod,std::set<mwIndex> & unique_groups,mwIndex current_node);
+std::unordered_map<mwIndex,double> mod_change(group_index &g, sparse &mod,std::set<mwIndex> & unique_groups,mwIndex current_node);
 
-std::map<mwIndex, double> mod_change(group_index &g, full & mod, std::set<mwIndex> & unique_groups, mwIndex current_node);
+std::unordered_map<mwIndex, double> mod_change(group_index &g, full & mod, std::set<mwIndex> & unique_groups, mwIndex current_node);
 
 
 #endif /* defined(__group_handler__group_handler__) */
