@@ -279,6 +279,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         for i=1:length(M(1))
             Q=Q+(P*M(i))'*P(:,i);
         end
+        Q=full(Q);
         return
     end
     
@@ -346,7 +347,7 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
     
     if isequal(Sb,S2)
         P=sparse(y,1:length(y),1);
-        Q=sum(sum((P*M).*P));
+        Q=full(sum(sum((P*M).*P)));
         return
     end
     
