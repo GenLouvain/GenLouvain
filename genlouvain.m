@@ -329,9 +329,13 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         dtot=dtot+dstep;
         y=group_handler('return');
         
+        mydisp([num2str(max(y)),' change: ',num2str(dstep),...
+            ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
          if numel(y)==numel(S)
             y=postprocessor(y);
-        end
+         end
+        
+         
     end
     
     for i = 1:length(y)
