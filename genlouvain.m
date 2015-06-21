@@ -244,7 +244,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     
     dstep=1;	%keeps track of change in modularity in pass
     yb=[];
-    while (~isequal(yb,y))&&(dstep/dtot>2*eps) %This is the loop around Blondel et al's "first phase"
+    while (~isequal(yb,y))&&(dstep/dtot>2*eps)&&(dstep>10*eps) %This is the loop around Blondel et al's "first phase"
         yb = y;
         dstep=0;
         group_handler('assign',y);
@@ -317,7 +317,7 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
     
     dstep=1;
     
-    while (~isequal(yb,y)) && (dstep/dtot>2*eps) %This is the loop around Blondel et al's "first phase"
+    while (~isequal(yb,y)) && (dstep/dtot>2*eps) && (dstep>10*eps) %This is the loop around Blondel et al's "first phase"
         
         % mydisp([num2str(length(unique(y))),' ',num2str(Q)])
         yb = y;
