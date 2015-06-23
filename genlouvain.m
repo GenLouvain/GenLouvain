@@ -266,7 +266,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     
     
     %group_handler implements tidyconfig
-    for i=1:length(y)
+    for i=1:numel(y)
         S(S==i)=y(i);
     end
     
@@ -339,7 +339,7 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
          
     end
     
-    for i = 1:length(y)
+    for i = 1:numel(y)
         S(S==i) = y(i);
         S2(S2==i) = y(i);
     end
@@ -362,7 +362,6 @@ function M = metanetwork(J,S)
 %Computes new aggregated network (communities --> nodes)
 PP = sparse(1:length(S),S,1);
 M = PP'*J*PP;
-M=full(M);
 end
 
 %-----%
