@@ -84,20 +84,18 @@ group_index & group_index::operator=(const mxArray *group_vec){
 
 //return index of nodes in group
 full group_index::index(mwIndex group){
-    if (group<n_groups) {
-    	full ind(1,groups[group].size());
-        
-        //iterate over elemnts in the list (add 1 for matlab indeces)
-        mwIndex i=0;
-        for(list<mwIndex>::iterator it=groups[group].begin(); it != groups[group].end(); it++){
-            ind.get(i)=*it+1;
-            i++;
-        }
-        return ind;
-    }
-    else {
+    if ( !(group<n_groups) ){
         mexErrMsgIdAndTxt("group_index:index", "group number out of bounds");
     }
+    full ind(1,groups[group].size());
+    
+    //iterate over elemnts in the list (add 1 for matlab indeces)
+    mwIndex i=0;
+    for(list<mwIndex>::iterator it=groups[group].begin(); it != groups[group].end(); it++){
+        ind.get(i)=*it+1;
+        i++;
+    }
+    return ind;
 }
 
 //moves node to specified group
