@@ -29,21 +29,22 @@ if max(S(:))<max_coms % don't do anything if too many communities for performanc
         overlap=G1*G2; % node overlap matrix between communities in the two layers
         dist=sum(overlap(:))-overlap;
         S2=assignmentoptimal(dist'); % find best assignment for communities in current layer
+
         for j=1:length(u2)
-            if S2(j)~=0
+            if S2(j)~=0&&overlap(S2(j),j)
                 S(G2(:,j),i)=u1(S2(j)); % update assignment
             else
                 S(G2(:,j),i)=max_com+1; % get new label if not assigned
                 max_com=max_com+1;
             end
         end
+
     end
-    
 end
 
 % return in original format
 S=tidy_config(S);
+
 S=reshape(S,N0,T0);
 end
-
 

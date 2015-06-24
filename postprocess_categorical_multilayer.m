@@ -68,7 +68,7 @@ while (p1-p0)>0
         S2=assignmentoptimal(dist);
         
         for j=1:length(ui)
-        if S2(j)~=0
+        if S2(j)~=0&&overlap(j,S2(j))>0
             S_new(Gi(:,j),i)=uc(S2(j)); % update assignment
         else
             S_new(Gi(:,j),i)=max_com+1; % get new label if not assigned
