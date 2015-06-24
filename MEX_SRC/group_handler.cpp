@@ -41,7 +41,7 @@
 
 #include "group_handler.h"
 
-#define NUM_TOL 2e-48
+#define NUM_TOL 1e-14
 
 
 using namespace std;
