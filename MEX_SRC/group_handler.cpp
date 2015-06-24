@@ -41,6 +41,8 @@
 
 #include "group_handler.h"
 
+#define NUM_TOL 2e-48
+
 
 using namespace std;
 
@@ -157,7 +159,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
     }
 
     //move current node to most optimal group
-    if(mod_max>0){
+    if(mod_max>NUM_TOL){
         g.move(node,group_move);
         d_step+=mod_max;
     }
@@ -210,7 +212,7 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 	// store groups that increase modularity
 	bool notempty = false;
 	for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
-		if(mod_c[*it]>0){
+		if(mod_c[*it]>NUM_TOL){
 			notempty = true;
 			unique_groups_pos.push_back(*it);
 			mod_pos.push_back(mod_c[*it]);
