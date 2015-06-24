@@ -374,20 +374,19 @@ sparse sparse::operator / (const full &B){
 }
 
 double sparse::get(mwIndex i, mwIndex j){
-    if (j<n&&i<m) {
-        mwIndex it=col[j];
-        while((it<col[j+1])&&(row[it]<i)){
-            it++;
-        }
-        if (row[it]==i) {
-            return val[it];
-        }
-        else{
-            return 0;
-        }
-    }
-    else {
+    if ( !(j<n&&i<m) ) {
         mexErrMsgIdAndTxt("sparse:get", "Index out of bounds");
     }
+    mwIndex it=col[j];
+    while((it<col[j+1])&&(row[it]<i)){
+        it++;
+    }
+    if (row[it]==i) {
+        return val[it];
+    }
+    else{
+        return 0;
+    }
+    
 }
 

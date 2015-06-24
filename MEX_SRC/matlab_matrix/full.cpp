@@ -203,38 +203,31 @@ void full::export_matlab(mxArray * & out){
 
 //get elements by index
 double & full::get(mwIndex i, mwIndex j){
-    if (i<m&&j<n) {
-    	return val[i+j*m];
-    }
-    else {
+    if ( !(i<m&&j<n) ) {
         mexErrMsgIdAndTxt("full:index", "index out of bounds");
     }
+    return val[i+j*m];
 }
 
 double full::get(mwIndex i, mwIndex j) const{
-    if (i<m&&j<n) {
-         return val[i+j*m];
-    }
-    else {
+    if ( !(i<m&&j<n) ) {
         mexErrMsgIdAndTxt("full:index:const", "index out of bounds");
     }
+    return val[i+j*m];
 }
 
 double & full::get(mwIndex i){
-    if (i<m*n) {
-     	return val[i];
-    }
-    else {
+    if ( !(i<m*n) ) {
         mexErrMsgIdAndTxt("full:index:linear", "index out of bounds");
     }
+    return val[i];
 }
+
 double full::get(mwIndex i) const{
-    if (i<m*n) {
-       return val[i];
-    }
-    else {
+    if ( !(i<m*n) ) {
         mexErrMsgIdAndTxt("full:index:linear:const", "index out of bounds");
     }
+    return val[i];
 }
 
 /*operations*/
