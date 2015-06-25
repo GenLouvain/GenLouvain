@@ -1,4 +1,4 @@
-function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor)
+function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,recursive)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
 %   Version 2.0 (July 2014)
 %
@@ -181,6 +181,11 @@ if nargin<7||isempty(postprocessor)
     postprocessor=@(S) S;
 end
 
+% set recursive option
+if nargin<8||isempty(recursive)
+    recursive=false;
+end
+
 %initialise variables and do symmetry check
 if isa(B,'function_handle')
     n=length(B(1));
@@ -313,8 +318,10 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
     clocktime=clock;
     mydisp(['Merging ',num2str(max(y)),' communities  ',datestr(clocktime)]);
     
+
     yb = [];
     
+    while ~isequal(yb,y)
     dstep=1;
     
     while (~isequal(yb,y)) && (dstep/dtot>2*eps) && (dstep>10*eps) %This is the loop around Blondel et al's "first phase"
@@ -335,8 +342,29 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
          if numel(y)==numel(S)
             y=postprocessor(y);
          end
-        
-         
+    end
+    yb=y;
+    if recursive
+    G=sparse(1:length(y),y,true);
+    for i=1:size(G,2)
+        ind=find(G(:,i));
+        current_mod=sum(sum(M(ind,ind)));
+        if current_mod<10^-8
+            y(ind)=max(y(:))+1:length(ind);
+        else
+        yi=genlouvain(M(ind,ind),[],0,randord,randmove);
+        P=sparse(yi,1:length(yi),1);
+        new_mod=full(sum(sum((P*M(ind,ind)).*P)));
+        if new_mod>current_mod+8*eps
+            mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
+            y(ind)=max(y(:))+yi;
+        end
+        end
+    end
+    
+    y=tidy_config(y);
+    end
+    
     end
     
     for i = 1:numel(y)
