@@ -220,7 +220,8 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
     }
 
 	// move node to a random group that increases modularity
-    uniform_int_distribution<mwIndex> randindex(0,unique_groups_pos.size()-1);
+    //uniform_int_distribution<mwIndex> randindex(0,unique_groups_pos.size()-1);
+    discrete_distribution<mwIndex> randindex(mod_pos.begin(),mod_pos.end());
     
     mwIndex rand_move;
 	if(notempty){
