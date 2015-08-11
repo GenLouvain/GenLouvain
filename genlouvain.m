@@ -247,25 +247,30 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     clocktime=clock;
     mydisp(['Merging ',num2str(length(y)),' communities  ',num2str(clocktime(4:6))]);
     
-    dstep=1;	%keeps track of change in modularity in pass
-    yb=[];
-    while (~isequal(yb,y))&&(dstep/dtot>2*eps)&&(dstep>10*eps) %This is the loop around Blondel et al's "first phase"
-        yb = y;
-        dstep=0;
-        group_handler('assign',y);
-        for i=myord(length(M(1)))
-            di=group_handler(movefunction,i,M(i));
-            dstep=dstep+di;
+    while ~isequal(yb,y)
+        dstep=1;	%keeps track of change in modularity in pass
+        yb=[];
+        while (~isequal(yb,y))&&(dstep/dtot>2*eps)&&(dstep>10*eps) %This is the loop around Blondel et al's "first phase"
+            yb = y;
+            dstep=0;
+            group_handler('assign',y);
+            for i=myord(length(M(1)))
+                di=group_handler(movefunction,i,M(i));
+                dstep=dstep+di;
+            end
+            
+            dtot=dtot+dstep;
+            y=group_handler('return');
+            mydisp([num2str(max(y)),' change: ',num2str(dstep),...
+                ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
+            
+            
         end
-        
-        dtot=dtot+dstep;
-        y=group_handler('return');
-        mydisp([num2str(max(y)),' change: ',num2str(dstep),...
-            ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
+        yb=y;
         if numel(y)==numel(S)
             y=postprocessor(y);
         end
-        
+        y=tidy_config(y);
     end
     
     
@@ -318,53 +323,53 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
     clocktime=clock;
     mydisp(['Merging ',num2str(max(y)),' communities  ',datestr(clocktime)]);
     
-
+    
     yb = [];
     
     while ~isequal(yb,y)
-    dstep=1;
-    
-    while (~isequal(yb,y)) && (dstep/dtot>2*eps) && (dstep>10*eps) %This is the loop around Blondel et al's "first phase"
+        dstep=1;
         
-        % mydisp([num2str(length(unique(y))),' ',num2str(Q)])
-        yb = y;
-        dstep=0;
-        group_handler('assign',y);
-        for i = myord(length(M))
-            di=group_handler(movefunction,i,M(:,i));
-            dstep=dstep+di;
+        while (~isequal(yb,y)) && (dstep/dtot>2*eps) && (dstep>10*eps) %This is the loop around Blondel et al's "first phase"
+            
+            % mydisp([num2str(length(unique(y))),' ',num2str(Q)])
+            yb = y;
+            dstep=0;
+            group_handler('assign',y);
+            for i = myord(length(M))
+                di=group_handler(movefunction,i,M(:,i));
+                dstep=dstep+di;
+            end
+            dtot=dtot+dstep;
+            y=group_handler('return');
+            
+            mydisp([num2str(max(y)),' change: ',num2str(dstep),...
+                ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
         end
-        dtot=dtot+dstep;
-        y=group_handler('return');
-        
-        mydisp([num2str(max(y)),' change: ',num2str(dstep),...
-            ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
-         if numel(y)==numel(S)
+        yb=y;
+        if numel(y)==numel(S)
             y=postprocessor(y);
-         end
-    end
-    yb=y;
-    if recursive
-    G=sparse(1:length(y),y,true);
-    for i=1:size(G,2)
-        ind=find(G(:,i));
-        current_mod=sum(sum(M(ind,ind)));
-        if current_mod<10^-8
-            y(ind)=max(y(:))+1:length(ind);
-        else
-        yi=genlouvain(M(ind,ind),[],0,randord,randmove);
-        P=sparse(yi,1:length(yi),1);
-        new_mod=full(sum(sum((P*M(ind,ind)).*P)));
-        if new_mod>current_mod+8*eps
-            mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
-            y(ind)=max(y(:))+yi;
         end
+        if recursive
+            G=sparse(1:length(y),y,true);
+            for i=1:size(G,2)
+                ind=find(G(:,i));
+                current_mod=sum(sum(M(ind,ind)));
+                if current_mod<10^-8
+                    y(ind)=max(y(:))+1:length(ind);
+                else
+                    yi=genlouvain(M(ind,ind),[],0,randord,randmove);
+                    P=sparse(yi,1:length(yi),1);
+                    new_mod=full(sum(sum((P*M(ind,ind)).*P)));
+                    if new_mod>current_mod+8*eps
+                        mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
+                        y(ind)=max(y(:))+yi;
+                    end
+                end
+            end
+            
+            y=tidy_config(y);
         end
-    end
-    
-    y=tidy_config(y);
-    end
-    
+        
     end
     
     for i = 1:numel(y)
