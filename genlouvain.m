@@ -246,7 +246,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     
     clocktime=clock;
     mydisp(['Merging ',num2str(length(y)),' communities  ',num2str(clocktime(4:6))]);
-    
+    yb=[];
     while ~isequal(yb,y)
         dstep=1;	%keeps track of change in modularity in pass
         yb=[];
