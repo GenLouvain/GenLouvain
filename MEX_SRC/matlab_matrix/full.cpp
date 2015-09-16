@@ -223,10 +223,18 @@ double & full::get(mwIndex i){
     return val[i];
 }
 
+double & full::operator[](mwIndex i){
+    return val[i];
+}
+
 double full::get(mwIndex i) const{
     if ( !(i<m*n) ) {
         mexErrMsgIdAndTxt("full:index:linear:const", "index out of bounds");
     }
+    return val[i];
+}
+
+double full::operator[](mwIndex i) const{
     return val[i];
 }
 
@@ -298,6 +306,34 @@ full full::operator / (const full &B) {
 	
 	return C;
 }
-	
+
+//row iterator
+double & full::rowiterator::operator[](mwSignedIndex i) {
+    mwSignedIndex c=(rowpos+i) % n;
+    mwSignedIndex r=(rowpos+i)/n;
+    return p[r+c*m];
+}
+
+double full::rowiterator::operator[](mwSignedIndex i) const {
+    mwSignedIndex c=(rowpos+i) % n;
+    mwSignedIndex r=(rowpos+i)/n;
+    double tmp=p[r+c*m];
+    return tmp;
+}
+
+double & full::rowiterator::operator*() {
+    return operator[](0);
+}
+
+
+full::rowiterator full::rowit(mwIndex i) {
+    return rowiterator(val, m, n, i*n);
+}
+
+full::rowiterator full::rowit(mwIndex i, mwIndex j) {
+    return rowiterator(val, m, n, i*n+j);
+}
+
+
 
 
