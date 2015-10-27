@@ -6,7 +6,7 @@
 //
 
 // Installation directory of MATLAB
-MATLABROOT = $(LOCAL_APPS_DIR)/MATLAB_R2015a.app
+MATLABROOT = $(LOCAL_APPS_DIR)/MATLAB_R2015b.app
 
 // Build Options
 //GCC_VERSION = com.apple.compilers.llvmgcc42
