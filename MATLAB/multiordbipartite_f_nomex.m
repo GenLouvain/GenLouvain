@@ -52,5 +52,5 @@ C=omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
     end
 
 B=@modf;
-twom=2*twom+2*N*T*omega;
+twom=2*twom+2*N*(T-1)*omega;
 end

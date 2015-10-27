@@ -109,6 +109,6 @@ clear ii jj vv
 kvec = full(sum(AA));
 AA = AA + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
 B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*kcell{ceil(i/(N+eps))}*kvec(i);
-twom=twom+2*N*T*omega;
+twom=twom+2*N*(T-1)*omega;
 
 end
