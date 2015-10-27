@@ -326,11 +326,11 @@ double & full::rowiterator::operator*() {
 }
 
 
-full::rowiterator full::rowit(mwIndex i) {
+full::rowiterator full::rowit(mwSignedIndex i) {
     return rowiterator(val, m, n, i*n);
 }
 
-full::rowiterator full::rowit(mwIndex i, mwIndex j) {
+full::rowiterator full::rowit(mwSignedIndex i, mwSignedIndex j) {
     return rowiterator(val, m, n, i*n+j);
 }
 

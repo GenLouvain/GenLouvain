@@ -110,12 +110,12 @@ private:
 public:
     class rowiterator : public std::iterator<std::random_access_iterator_tag, double, mwSignedIndex> {
         double * p;
-        mwSize m;
-        mwSize n;
+        mwSignedIndex m;
+        mwSignedIndex n;
         mwSignedIndex rowpos;
     public:
         rowiterator() : p(nullptr), m(0) {}
-        rowiterator(double * init, mwSize _m, mwSize _n, mwSignedIndex _rowpos) : p(init), m(_m), n(_n) ,rowpos(_rowpos) {}
+        rowiterator(double * init, mwSignedIndex _m, mwSignedIndex _n, mwSignedIndex _rowpos) : p(init), m(_m), n(_n) ,rowpos(_rowpos) {}
         rowiterator & operator=(const rowiterator & it) {p=it.p; m=it.m; n=it.n; rowpos=it.rowpos; return *this;}
         bool operator == (const rowiterator & it) {return rowpos==it.rowpos;}
         bool operator != (const rowiterator & it) {return rowpos!=it.rowpos;}
@@ -136,8 +136,8 @@ public:
         double operator [] (mwSignedIndex i) const;
     };
     
-    rowiterator rowit(mwIndex i);
-    rowiterator rowit(mwIndex i,mwIndex j);
+    rowiterator rowit(mwSignedIndex i);
+    rowiterator rowit(mwSignedIndex i,mwSignedIndex j);
     
     typedef double * coliterator;
     
