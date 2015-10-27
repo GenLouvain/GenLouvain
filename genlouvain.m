@@ -176,9 +176,9 @@ if nargin<6||isempty(S0)
 end
 
 % set postprocessing function
-if nargin<7||isempty(postprocessor)
+if nargin<7
     % default: do not do anything
-    postprocessor=@(S) S;
+    postprocessor=[];
 end
 
 % set recursive option
@@ -267,18 +267,17 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
             
         end
         yb=y;
-        if numel(y)==numel(S)
+        if ~isempty(postprocessor)
             y=postprocessor(y);
+            y=tidy_config(y);
         end
-        y=tidy_config(y);
+        
     end
     
     
     
     %group_handler implements tidyconfig
-    for i=1:numel(y)
-        S(S==i)=y(i);
-    end
+    S=y(S);
     
     y = unique(y);  %unique also puts elements in ascending order
     
@@ -372,11 +371,8 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         
     end
     
-    for i = 1:numel(y)
-        S(S==i) = y(i);
-        S2(S2==i) = y(i);
-    end
-    
+    S=y(S);
+    S2=y(S2);
     
     if isequal(Sb,S2)
         P=sparse(y,1:length(y),1);
