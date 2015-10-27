@@ -242,7 +242,7 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 //calculates changes in modularity for full modularity matrix
 map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mwIndex current_node){
     mwIndex current_group=g.nodes[current_node];
-    map_type mod_c(g.n_groups);
+    map_type mod_c;
     double mod_current= mod.get(current_node);
     
     for (set<mwIndex>::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
@@ -268,7 +268,7 @@ map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mw
 map_type mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, mwIndex current_node){
     
     mwIndex current_group=g.nodes[current_node];
-    map_type mod_c(g.n_groups);
+    map_type mod_c;
     double mod_current=mod.get(current_node, 0);
     
     for(set<mwIndex>::iterator it=unique_groups.begin(); it!=unique_groups.end();it++){
