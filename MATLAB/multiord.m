@@ -98,11 +98,12 @@ end
 B=spalloc(N*T,N*T,N*N*T+2*N*T);
 mm=0;
 for s=1:T
-    k=sum(A{s});
-    twom=sum(k);
+    kout=sum(A{s},1);
+    kin=sum(A{2},2);
+    twom=sum(kout);
 	mm=mm+twom;
     indx=[1:N]+(s-1)*N;
-    B(indx,indx)=A{s}-gamma(s).*(k'*k/twom);
+    B(indx,indx)=A{s}-gamma(s).*(kin*kout/twom);
 end
 B = B + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
 mm=mm+2*N*(T-1)*omega;
