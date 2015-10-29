@@ -27,6 +27,7 @@
 
 
 typedef std::unordered_map<mwIndex, double> map_type;
+//typedef std::map<mwIndex, double> map_type;
 //typedef std::vector<double> map_type;
 
 
