@@ -296,12 +296,12 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     t = length(unique(S));
     if (t>limit)
         metanetwork_reduce('assign',S); %inputs group information to metanetwork_reduce
-        M=@(i) metanetwork_i(B,t,i); %use function handle if #groups>limit
+        M=@(i) metanetwork_i(B,i); %use function handle if #groups>limit
     else
         metanetwork_reduce('assign',S);
         J = zeros(t);   %convert to matrix if #groups small enough
         for c=1:t
-            J(:,c)=metanetwork_i(B,t,c);
+            J(:,c)=metanetwork_i(B,c);
         end
         B = J;
         M=B;
@@ -345,8 +345,9 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
                 ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
         end
         yb=y;
-        if numel(y)==numel(S)
+        if ~isempty(postprocessor(y))
             y=postprocessor(y);
+             y=tidy_config(y);
         end
         if recursive
             G=sparse(1:length(y),y,true);
@@ -394,16 +395,12 @@ M = PP'*J*PP;
 end
 
 %-----%
-function Mi = metanetwork_i(J,t,i)
+function Mi = metanetwork_i(J,i)
 %ith column of metanetwork (used to create function handle)
 %J is a function handle
-Mi=zeros(t,1);
 ind=metanetwork_reduce('nodes',i);
-for j=ind
-    Jj=J(j);
-    P=metanetwork_reduce('reduce',Jj);
-    Mi=Mi+P;
-end
+Jj=arrayfun(J,ind,'UniformOutput',false);
+Mi=metanetwork_reduce('reduce',[Jj{:}]);
 end
 
 
