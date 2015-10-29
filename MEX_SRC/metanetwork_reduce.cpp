@@ -84,7 +84,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         }
         else if (!strcmp(handle, "nodes")) {
             if (nrhs!=2||nlhs<1) {
-                mexErrMsgIdAndTxt("metaneetwork_reduce:nodes", "nodes needs 1 input and 1 output argument");
+                mexErrMsgIdAndTxt("metanetwork_reduce:nodes", "nodes needs 1 input and 1 output argument");
             }
             full nodes=group.index(*mxGetPr(prhs[1])-1);
             nodes.export_matlab(plhs[0]);
