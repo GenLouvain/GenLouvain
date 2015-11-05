@@ -49,7 +49,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         handle=(char *) mxCalloc(strleng, sizeof(char));
         
         if (mxGetString(prhs[0],handle,strleng)) {
-            mexErrMsgIdAndTxt("group_handler:handle", "handle needs to be a string");
+            mexErrMsgIdAndTxt("metanetwork_reduce:handle:string", "handle needs to be a string");
         }
         
         //switch on handle
@@ -114,5 +114,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
             nodes.export_matlab(plhs[0]);
         }
     }
-
+    else {
+        mexErrMsgIdAndTxt("metanetwork_reduce:handle", "need a handle to function");
+    }
 }
