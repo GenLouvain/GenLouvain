@@ -113,7 +113,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 
 //move node to most optimal group
 double move(group_index & g, mwIndex node, const mxArray * mod){
-    set<mwIndex> unique_groups;
+    set_type unique_groups(g.n_groups);
     unique_groups.insert(g.nodes[node]);
     
     map_type mod_c;
@@ -151,7 +151,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
 
 	mwIndex group_move=g.nodes[node]; //stay in current group if no improvement
 
-	for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
+	for(set_type::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
         if(mod_c[*it]>mod_max){
             mod_max=mod_c[*it];
             group_move=*it;
@@ -169,7 +169,7 @@ double move(group_index & g, mwIndex node, const mxArray * mod){
 
 //move node to random group increasing modularity
 double moverand(group_index & g, mwIndex node, const mxArray * mod){
-    set<mwIndex> unique_groups;
+    set_type unique_groups(g.n_groups);
     unique_groups.insert(g.nodes[node]);
     
     map_type mod_c;
@@ -211,7 +211,7 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 
 	// store groups that increase modularity
 	bool notempty = false;
-	for(set<mwIndex>::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
+	for(set_type::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
 		if(mod_c[*it]>NUM_TOL){
 			notempty = true;
 			unique_groups_pos.push_back(*it);
@@ -240,12 +240,12 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 }
 
 //calculates changes in modularity for full modularity matrix
-map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mwIndex current_node){
+map_type mod_change(group_index &g, full & mod, set_type & unique_groups, mwIndex current_node){
     mwIndex current_group=g.nodes[current_node];
     map_type mod_c;
     double mod_current= mod.get(current_node);
     
-    for (set<mwIndex>::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
+    for (set_type::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
         double mod_c_group=0;
         for(list<mwIndex>::iterator it2=g.groups[*it1].begin(); it2!=g.groups[*it1].end(); it2++){
             mod_c_group+=mod.get(*it2);
@@ -256,7 +256,7 @@ map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mw
     mod_c[current_group]-=mod_current;
     mod_current=mod_c[current_group];
     
-    for (set<mwIndex>::iterator it=unique_groups.begin(); it!=unique_groups.end(); it++) {
+    for (set_type::iterator it=unique_groups.begin(); it!=unique_groups.end(); it++) {
         mod_c[*it]-=mod_current;
     }
     
@@ -265,13 +265,13 @@ map_type mod_change(group_index &g, full & mod, set<mwIndex> & unique_groups, mw
 
 
 //calculates changes in modularity for sparse modularity matrix
-map_type mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, mwIndex current_node){
+map_type mod_change(group_index &g, sparse & mod, set_type & unique_groups, mwIndex current_node){
     
     mwIndex current_group=g.nodes[current_node];
     map_type mod_c;
     double mod_current=mod.get(current_node, 0);
     
-    for(set<mwIndex>::iterator it=unique_groups.begin(); it!=unique_groups.end();it++){
+    for(set_type::iterator it=unique_groups.begin(); it!=unique_groups.end();it++){
         mod_c[*it]=0;
     }
     
@@ -285,9 +285,13 @@ map_type mod_change(group_index &g, sparse & mod, set<mwIndex> & unique_groups, 
     mod_c[current_group]-=mod_current;
     mod_current=mod_c[current_group];
     
-    for (set<mwIndex>::iterator it=unique_groups.begin(); it!=unique_groups.end(); it++) {
+    for (set_type::iterator it=unique_groups.begin(); it!=unique_groups.end(); it++) {
         mod_c[*it]-=mod_current;
     }
     
     return mod_c;
 }
+
+
+
+
