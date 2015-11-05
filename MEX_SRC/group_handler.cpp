@@ -243,7 +243,7 @@ double moverand(group_index & g, mwIndex node, const mxArray * mod){
 map_type mod_change(group_index &g, full & mod, set_type & unique_groups, mwIndex current_node){
     mwIndex current_group=g.nodes[current_node];
     map_type mod_c;
-    double mod_current= mod.get(current_node);
+    double mod_current= mod[current_node];
     
     for (set_type::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); it1++) {
         double mod_c_group=0;
