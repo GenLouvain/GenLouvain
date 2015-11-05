@@ -31,7 +31,7 @@
 
 #include "matlab_matrix.h"
 #include "group_index.h"
-#include <map>
+#include <unordered_map>
 #include <cstring>
 
 #ifndef OCTAVE
@@ -67,13 +67,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                 
                 if (mxIsSparse(prhs[1])) {
                     sparse mod_s(prhs[1]);
-                    map<mwIndex, double> mod_map;
+                    unordered_map<mwIndex, double> mod_map;
                     if (mod_s.m==group.n_nodes) {
                         for (mwIndex i=0; i<mod_s.nzero(); i++) {
                             mod_map[group.nodes[mod_s.row[i]]]+=mod_s.val[i];
                         }
                         sparse mod_out(group.n_groups,1,mod_map.size());
-                        map<mwIndex, double>::iterator it=mod_map.begin();
+                        unordered_map<mwIndex, double>::iterator it=mod_map.begin();
                         for (mwIndex i=0; i<mod_map.size(); ++i) {
                             mod_out.row[i]=it->first;
                             mod_out.val[i]=it->second;
