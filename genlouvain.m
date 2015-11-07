@@ -399,8 +399,10 @@ function Mi = metanetwork_i(J,i)
 %ith column of metanetwork (used to create function handle)
 %J is a function handle
 ind=metanetwork_reduce('nodes',i);
-Jj=arrayfun(J,ind,'UniformOutput',false);
-Mi=metanetwork_reduce('reduce',[Jj{:}]);
+for j=ind(:)'
+    metanetwork_reduce('reduce',J(j));
+end
+Mi=metanetwork_reduce('return');
 end
 
 
