@@ -22,7 +22,7 @@ col[0]=0;
 
 //copy constructor
 sparse::sparse(const sparse &matrix): m(matrix.m), n(matrix.n), nmax(matrix.nmax), export_flag(0) {
-    
+
     //allocate memory
     row=(mwIndex *) mxCalloc(nmax,sizeof(mwIndex));
     col=(mwIndex *) mxCalloc(n+1, sizeof(mwIndex));
@@ -48,6 +48,42 @@ sparse::sparse(mwSize m_,mwSize n_,mwSize nmax_):m(m_), n(n_), nmax(nmax_), expo
     row=(mwIndex *) mxCalloc(nmax,sizeof(mwIndex));
     col=(mwIndex *) mxCalloc(n+1,sizeof(mwIndex));
     val=(double *) mxCalloc(nmax, sizeof(double));
+}
+
+//convert from full
+sparse::sparse(const full & matrix) {
+    
+    //copy size
+    m=matrix.m;
+    n=matrix.n;
+    
+    //find number of non-zero elements
+    nmax=0;
+    for (mwIndex i=0; i<m*n; i++) {
+        if (matrix.val[i]!=0) {
+            nmax++;
+        }
+    }
+
+    
+    //allocate memory
+    row=(mwIndex *) mxMalloc(nmax*sizeof(mwIndex));
+    col=(mwIndex *) mxMalloc((n+1)*sizeof(mwIndex));
+    val=(double *)  mxMalloc(nmax*sizeof(double));
+    
+    //assign values (c tracks number of non-zero elements used to assign appropriate values to col)
+    mwIndex c=0;
+    for (mwIndex j=0; j<n; j++) {
+        col[j]=c;
+        for (mwIndex i=0; i<m; i++){
+            if (matrix[i+j*m]!=0) {
+                row[c]=i;
+                val[c]=matrix[i+j*m];
+                c++;
+            }
+        }
+    }
+    col[n]=c;
 }
 
 

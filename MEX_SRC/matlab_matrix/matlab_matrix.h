@@ -35,6 +35,7 @@ struct sparse{
 	sparse();
 	sparse(mwSize m, mwSize n, mwSize nmax);
 	sparse(const sparse &matrix);
+    sparse(const full & matrix);
 	sparse(const mxArray *matrix);
 
 	~sparse();
@@ -102,6 +103,12 @@ struct full{
 	mwSize n;
 	
 	double *val;
+    
+    typedef double * coliterator;
+    
+    coliterator colit(mwIndex i) {return val+i*m;}
+    coliterator colit(mwIndex i,mwIndex j) {return val+(i+j*m);}
+
 	
 private:
 	
@@ -139,11 +146,7 @@ public:
     rowiterator rowit(mwSignedIndex i);
     rowiterator rowit(mwSignedIndex i,mwSignedIndex j);
     
-    typedef double * coliterator;
-    
-    coliterator colit(mwIndex i) {return val+i;}
-    coliterator colit(mwIndex i,mwIndex j) {return val+(i+j*m);}
-};
+   };
 
 
 #endif
