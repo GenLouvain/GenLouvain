@@ -169,7 +169,7 @@ full & full::operator = (const mxArray * matrix){
             //copy input values
             for(mwIndex j=0; j<n; j++){
                 for(mwIndex i=col[j]; i<col[j+1];i++){
-                    get(row[i],j)=pr[i];
+                    val[row[i]+j*m]=pr[i];
                 }
             }
         }
