@@ -165,9 +165,16 @@ sparse & sparse::operator = (const sparse & matrix){
 		nmax=matrix.nmax;
         
         //allocate memory
-		row=(mwIndex *) mxRealloc(row, nmax*sizeof(mwIndex));
-		col=(mwIndex *) mxRealloc(col, (n+1)*sizeof(mwIndex));
-		val=(double *) mxRealloc(val, nmax*sizeof(double));
+        if (export_flag) {
+            row=(mwIndex *) mxMalloc(nmax*sizeof(mwIndex));
+            col=(mwIndex *) mxMalloc((n+1)*sizeof(mwIndex));
+            val=(double *) mxMalloc(nmax*sizeof(double));
+        }
+        else {
+            row=(mwIndex *) mxRealloc(row, nmax*sizeof(mwIndex));
+            col=(mwIndex *) mxRealloc(col, (n+1)*sizeof(mwIndex));
+            val=(double *) mxRealloc(val, nmax*sizeof(double));
+        }
 		
         //copy row index and values
 		for(mwIndex i=0; i<matrix.nzero(); i++){
@@ -201,9 +208,16 @@ sparse & sparse::operator=(const full &matrix){
     }
     
     //allocate memory
-    row=(mwIndex *) mxRealloc(row, nmax*sizeof(mwIndex));
-    col=(mwIndex *) mxRealloc(col, (n+1)*sizeof(mwIndex));
-    val=(double *)  mxRealloc(val, nmax*sizeof(double));
+    if (export_flag) {
+        row=(mwIndex *) mxMalloc(nmax*sizeof(mwIndex));
+        col=(mwIndex *) mxMalloc((n+1)*sizeof(mwIndex));
+        val=(double *) mxMalloc(nmax*sizeof(double));
+    }
+    else {
+        row=(mwIndex *) mxRealloc(row, nmax*sizeof(mwIndex));
+        col=(mwIndex *) mxRealloc(col, (n+1)*sizeof(mwIndex));
+        val=(double *)  mxRealloc(val, nmax*sizeof(double));
+    }
     
     //assign values (c tracks number of non-zero elements used to assign appropriate values to col)
     mwIndex c=0;
@@ -237,9 +251,16 @@ sparse & sparse::operator = (const mxArray *matrix){
             
             //allocate memory
             nmax=mxGetNzmax(matrix);
-            row=(mwIndex *) mxRealloc(row,nmax*sizeof(mwIndex));
-            col=(mwIndex *) mxRealloc(col,(n+1)*sizeof(mwIndex));
-            val=(double *) mxRealloc(val,nmax*sizeof(double));
+            if (export_flag) {
+                row=(mwIndex *) mxMalloc(nmax*sizeof(mwIndex));
+                col=(mwIndex *) mxMalloc((n+1)*sizeof(mwIndex));
+                val=(double *) mxMalloc(nmax*sizeof(double));
+            }
+            else {
+                row=(mwIndex *) mxRealloc(row,nmax*sizeof(mwIndex));
+                col=(mwIndex *) mxRealloc(col,(n+1)*sizeof(mwIndex));
+                val=(double *) mxRealloc(val,nmax*sizeof(double));
+            }
             
             //get values of input matrix
             mwIndex *row_in=mxGetIr(matrix);
@@ -273,10 +294,17 @@ sparse & sparse::operator = (const mxArray *matrix){
             }
             
             //allocate memory
-            row=(mwIndex *) mxRealloc(row,nmax*sizeof(mwIndex));
-            col=(mwIndex *) mxRealloc(col,(n+1)*sizeof(mwIndex));
-            val=(double *) mxRealloc(val,nmax*sizeof(double));
-            
+            if (export_flag) {
+                row=(mwIndex *) mxMalloc(nmax*sizeof(mwIndex));
+                col=(mwIndex *) mxMalloc((n+1)*sizeof(mwIndex));
+                val=(double *) mxMalloc(nmax*sizeof(double));
+            }
+            else {
+                row=(mwIndex *) mxRealloc(row,nmax*sizeof(mwIndex));
+                col=(mwIndex *) mxRealloc(col,(n+1)*sizeof(mwIndex));
+                val=(double *) mxRealloc(val,nmax*sizeof(double));
+            }
+                
             //assign values (c tracks number of non-zero elements used to assign appropriate values to col)
             mwIndex c=0;
             for(mwIndex j=0; j<n; j++){
@@ -322,7 +350,7 @@ void sparse::export_matlab(mxArray * & out){
 	mxSetNzmax(out,nmax);
 	
     //set export flag
-	export_flag=1;
+	export_flag=true;
 	
 }
 

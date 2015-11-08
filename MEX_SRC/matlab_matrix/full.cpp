@@ -91,7 +91,12 @@ full & full::operator = (const full & matrix) {
 		n=matrix.n;
         
         //allocate memory
-		val=(double *) mxRealloc(val,m*n*sizeof(double));
+        if (export_flag) {
+            val=(double *) mxMalloc(m*n*sizeof(double));
+        }
+        else {
+            val=(double *) mxRealloc(val,m*n*sizeof(double));
+        }
         
         //copy values
 		for(mwIndex i=0; i<m*n;i++){
@@ -111,7 +116,15 @@ full & full::operator = (const sparse & matrix){
     n=matrix.n;
     
     //allocate memory
-    val=(double *) mxRealloc(val, m*n*sizeof(double));
+    if (export_flag) {
+        val=(double *) mxMalloc(m*n*sizeof(double));
+    }
+    else {
+        val=(double *) mxRealloc(val, m*n*sizeof(double));
+    }
+    for (mwIndex i=0; i<m*n; ++i) {
+        val[i]=0;
+    }
     
     //copy values
     for(mwIndex j=0; j<n; j++){
@@ -137,7 +150,12 @@ full & full::operator = (const mxArray * matrix){
             //input is sparse
         
             //allocate memory
-            val=(double *) mxRealloc(val,total_size*sizeof(double));
+            if (export_flag) {
+                val=(double *) mxMalloc(total_size*sizeof(double));
+            }
+            else {
+                val=(double *) mxRealloc(val,total_size*sizeof(double));
+            }
             //initialise to 0
             for (mwIndex i=0; i<total_size; i++) {
                 val[i]=0;
@@ -162,7 +180,12 @@ full & full::operator = (const mxArray * matrix){
             double * val_in=mxGetPr(matrix);
             
             //allocate memory
-            val=(double *) mxRealloc(val,total_size*sizeof(double));
+            if (export_flag) {
+                val=(double *) mxMalloc(total_size*sizeof(double));
+            }
+            else {
+                val=(double *) mxRealloc(val,total_size*sizeof(double));
+            }
 		
             //copy values
             
@@ -197,7 +220,7 @@ void full::export_matlab(mxArray * & out){
 	mxSetPr(out, val);
 	
     //set export flag
-	export_flag=1;
+	export_flag=true;
 }
 	
 
