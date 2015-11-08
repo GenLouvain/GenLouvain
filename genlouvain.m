@@ -345,7 +345,7 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
                 ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
         end
         yb=y;
-        if ~isempty(postprocessor(y))
+        if ~isempty(postprocessor)
             y=postprocessor(y);
              y=tidy_config(y);
         end
