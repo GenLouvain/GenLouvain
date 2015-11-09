@@ -40,7 +40,7 @@
 
 using namespace std;
 static group_index group;
-static vector<double> *mod_reduced=new vector<double>();
+static vector<double> mod_reduced=vector<double>();
 static bool return_sparse;
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
@@ -62,8 +62,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
             }
             group=prhs[1];
             //zero out mod_reduced for next iteration
-            delete mod_reduced;
-            mod_reduced= new vector<double>(group.n_groups,0);
+            mod_reduced=vector<double>(group.n_groups,0);
             return_sparse=false;
         }
         else if (!strcmp(handle, "reduce")){
@@ -77,7 +76,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     sparse mod_s(prhs[1]);
                     if (mod_s.m==group.n_nodes) {
                         for (mwIndex i=0; i<mod_s.nzero(); i++) {
-                            mod_reduced->operator[](group.nodes[mod_s.row[i]])+=mod_s.val[i];
+                            mod_reduced[group.nodes[mod_s.row[i]]]+=mod_s.val[i];
                         }
                     }
                     else {
@@ -90,7 +89,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                         for (mwIndex i=0; i<group.n_groups; i++) {
                             for (list<mwIndex>::iterator it=group.groups[i].begin(); it!=group.groups[i].end(); ++it) {
                                 for (full::rowiterator rit=mod_d.rowit(*it); rit!=mod_d.rowit(*it+1); ++rit) {
-                                    mod_reduced->operator[](i)+=*rit;
+                                    mod_reduced[i]+=*rit;
                                 }
                             }
                         }
@@ -115,15 +114,15 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                 mexErrMsgIdAndTxt("metanetwork_reduce:return", "return needs 1 output argument and no input arguments");
             }
             if (return_sparse) {
-                sparse mod_out=*mod_reduced;
+                sparse mod_out=mod_reduced;
                 mod_out.export_matlab(plhs[0]);
             }
             else {
-                full mod_out=*mod_reduced;
+                full mod_out=mod_reduced;
                 mod_out.export_matlab(plhs[0]);
             }
             //zero out mod_reduced for next iteration
-            for (vector<double>::iterator it=mod_reduced->begin(); it!=mod_reduced->end(); ++it) {
+            for (vector<double>::iterator it=mod_reduced.begin(); it!=mod_reduced.end(); ++it) {
                 *it=0;
             }
             return_sparse=false;
