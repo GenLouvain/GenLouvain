@@ -356,17 +356,13 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
             for i=1:size(G,2)
                 ind=find(G(:,i));
                 current_mod=sum(sum(M(ind,ind)));
-                if current_mod<10^-8
-                    y(ind)=max(y(:))+1:length(ind);
-                else
-                    yi=genlouvain(M(ind,ind),[],0,randord,randmove);
-                    P=sparse(yi,1:length(yi),1);
-                    new_mod=full(sum(sum((P*M(ind,ind)).*P)));
-                    if new_mod>current_mod+8*eps
-                        mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
-                        y(ind)=max(y(:))+yi;
-                    end
+                
+                [yi,new_mod]=genlouvain(M(ind,ind),[],0,randord,randmove);
+                if new_mod>current_mod+8*eps
+                    mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
+                    y(ind)=max(y(:))+yi;
                 end
+                
             end
             
             y=tidy_config(y);
