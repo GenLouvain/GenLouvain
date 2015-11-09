@@ -289,6 +289,8 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
             Q=Q+(P*M(i))'*P(:,i);
         end
         Q=full(Q);
+        clear('group_handler');
+        clear('metanetwork_reduce');
         return
     end
     
@@ -378,6 +380,8 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
     if isequal(Sb,S2)
         P=sparse(y,1:length(y),1);
         Q=full(sum(sum((P*M).*P)));
+        clear('group_handler');
+        clear('metanetwork_reduce');
         return
     end
     
