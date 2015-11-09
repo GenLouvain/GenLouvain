@@ -142,6 +142,31 @@ sparse::sparse(const mxArray * matrix): m(mxGetM(matrix)), n(mxGetN(matrix)), ex
     }
 }
 
+//copy construct from vector<double>
+sparse::sparse(const std::vector<double> & vec) : m(vec.size()), n(1) {
+    nmax=0;
+    for (std::vector<double>::const_iterator it=vec.begin(); it!=vec.end(); ++it) {
+        if (*it!=0) {
+            ++nmax;
+        }
+    }
+    //allocate memory
+    row=(mwIndex *) mxCalloc(nmax,sizeof(mwIndex));
+    col=(mwIndex *) mxCalloc(n+1,sizeof(mwIndex));
+    val=(double *) mxCalloc(nmax, sizeof(double));
+    
+    mwIndex c=0;
+    col[0]=0;
+    for (mwIndex i=0; i<m; ++i) {
+        if (vec[i]!=0) {
+            row[c]=i;
+            val[c]=vec[i];
+            ++c;
+        }
+    }
+    col[1]=c;
+}
+
 
 //destructor (free memory if it has not been exported  to matlab array)
 sparse::~sparse(){
@@ -327,6 +352,42 @@ sparse & sparse::operator = (const mxArray *matrix){
 	return *this;
 }
 
+sparse & sparse::operator=(const std::vector<double> &vec) {
+    m=vec.size();
+    n=1;
+    nmax=0;
+    for (std::vector<double>::const_iterator it=vec.begin(); it!=vec.end(); ++it) {
+        if (*it!=0) {
+            ++nmax;
+        }
+    }
+    //allocate memory
+    if (export_flag) {
+        row=(mwIndex *) mxCalloc(nmax,sizeof(mwIndex));
+        col=(mwIndex *) mxCalloc(n+1,sizeof(mwIndex));
+        val=(double *) mxCalloc(nmax, sizeof(double));
+    }
+    else {
+        row=(mwIndex *) mxRealloc(row,nmax*sizeof(mwIndex));
+        col=(mwIndex *) mxRealloc(col,(n+1)*sizeof(mwIndex));
+        val=(double *) mxRealloc(val,nmax*sizeof(double));
+    }
+    
+    //copy values
+    mwIndex c=0;
+    col[0]=0;
+    for (mwIndex i=0; i<m; ++i) {
+        if (vec[i]!=0) {
+            row[c]=i;
+            val[c]=vec[i];
+            ++c;
+        }
+    }
+    col[1]=c;
+    
+    return *this;
+
+}
 
 //export to sparse matlab mxArray (sets export flag to avoid freeing memory if used to set output argument)
 void sparse::export_matlab(mxArray * & out){
@@ -407,7 +468,6 @@ sparse sparse::operator / (const sparse &B){
 		}
 	}
 	C.col[n]=j;
-	
 	return C;
 }
 
@@ -433,7 +493,6 @@ sparse sparse::operator / (const full &B){
 	}
 	C.col[n]=col[n];
 	
-	
 	return C;
 }
 
@@ -451,6 +510,5 @@ double sparse::get(mwIndex i, mwIndex j){
     else{
         return 0;
     }
-    
 }
 

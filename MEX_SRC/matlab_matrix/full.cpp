@@ -71,6 +71,18 @@ full::full(const mxArray * matrix): m(mxGetM(matrix)), n(mxGetN(matrix)), export
     }
 }
 
+//construct from vector<double>
+full::full(const std::vector<double> &vec) : m(vec.size()), n(1), export_flag(0) {
+    //allocate memory
+    val= (double *) mxMalloc(m*n*sizeof(double));
+    //assign values
+    std::vector<double>::const_iterator it=vec.begin();
+    for (mwIndex i=0; i<m*n; ++i) {
+        val[i]=*it;
+        ++it;
+    }
+}
+
 
 //destructor free memory if it has not been exported  to matlab array)
 full::~full(){
@@ -200,6 +212,26 @@ full & full::operator = (const mxArray * matrix){
 	}
     
 	return *this;
+}
+
+//copy from vector
+full & full::operator=(const std::vector<double> &vec) {
+    m=vec.size();
+    n=1;
+    
+    if (export_flag) {
+        val=(double *) mxMalloc(m*n*sizeof(double));
+    }
+    else {
+        val=(double *) mxRealloc(val, m*n*sizeof(double));
+    }
+    //assign values
+    std::vector<double>::const_iterator it=vec.begin();
+    for (mwIndex i=0; i<m*n; ++i) {
+        val[i]=*it;
+        ++it;
+    }
+    return *this;
 }
 
 

@@ -22,6 +22,7 @@
 
 #include <limits>
 #include <iterator>
+#include <vector>
 
 #include "mex.h"
 
@@ -37,6 +38,7 @@ struct sparse{
 	sparse(const sparse &matrix);
     sparse(const full & matrix);
 	sparse(const mxArray *matrix);
+    sparse(const std::vector<double> & vec);
 
 	~sparse();
 	
@@ -45,6 +47,8 @@ struct sparse{
     sparse & operator = (const full & matrix);
 	
 	sparse & operator = (const mxArray *matrix);
+    
+    sparse & operator = (const std::vector<double> & vec);
 	
 	
 	/*operations*/
@@ -77,6 +81,7 @@ struct full{
 	full(mwSize m, mwSize n);
 	full(const full &matrix);
 	full(const mxArray * matrix);
+    full(const std::vector<double> & vec);
 	
 	~full();
     
@@ -87,6 +92,8 @@ struct full{
     full & operator = (const sparse & matrix);
 	
 	full & operator = (const mxArray * matrix);
+    
+    full & operator = (const std::vector<double> & vec);
 	
 	double & get(mwIndex i, mwIndex j);
     double get(mwIndex i,mwIndex j) const;
