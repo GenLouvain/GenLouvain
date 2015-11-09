@@ -40,7 +40,7 @@
 
 using namespace std;
 static group_index group;
-static vector<double>* mod_reduced =new vector<double>();
+static vector<double> *mod_reduced=new vector<double>();
 static bool return_sparse;
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
@@ -56,41 +56,37 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         
         //switch on handle
         if (!strcmp(handle, "assign")) {
+            //assign new group structure for aggregation
             if (nrhs!=2) {
                 mexErrMsgIdAndTxt("metanetwork_reduce:assign", "assign needs 1 input argument");
             }
             group=prhs[1];
+            //zero out mod_reduced for next iteration
             delete mod_reduced;
             mod_reduced= new vector<double>(group.n_groups,0);
-            //zero out mod_reduced for next iteration
-
             return_sparse=false;
         }
         else if (!strcmp(handle, "reduce")){
+            //add modularity contributions to current column
             if (nrhs!=2||nlhs!=0) {
                 mexErrMsgIdAndTxt("metanetwork_reduce:reduce", "reduce needs 1 input and no output argument");
             }
             if (mxIsDouble(prhs[1])) {
-                
-                if (mxIsSparse(prhs[1])) {
+                if (mxIsSparse(prhs[1])) { //sparse modularity input
                     return_sparse=true;
                     sparse mod_s(prhs[1]);
-                    
                     if (mod_s.m==group.n_nodes) {
-
                         for (mwIndex i=0; i<mod_s.nzero(); i++) {
                             mod_reduced->operator[](group.nodes[mod_s.row[i]])+=mod_s.val[i];
                         }
-
                     }
                     else {
                         mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
                     }
                 }
-                else {
+                else {//full modularity input
                     full mod_d(prhs[1]);
                     if (mod_d.m==group.n_nodes) {
-
                         for (mwIndex i=0; i<group.n_groups; i++) {
                             for (list<mwIndex>::iterator it=group.groups[i].begin(); it!=group.groups[i].end(); ++it) {
                                 for (full::rowiterator rit=mod_d.rowit(*it); rit!=mod_d.rowit(*it+1); ++rit) {
@@ -98,7 +94,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                                 }
                             }
                         }
-
                     }
                     else {
                         mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
@@ -107,6 +102,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
             }
         }
         else if (!strcmp(handle, "nodes")) {
+            //return matlab indeces of nodes in group i
             if (nrhs!=2||nlhs<1) {
                 mexErrMsgIdAndTxt("metanetwork_reduce:nodes", "nodes needs 1 input and 1 output argument");
             }
@@ -114,38 +110,16 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
             nodes.export_matlab(plhs[0]);
         }
         else if (!strcmp(handle, "return")) {
+            //return modularity contributions and reset
             if (nrhs!=1|nlhs!=1) {
                 mexErrMsgIdAndTxt("metanetwork_reduce:return", "return needs 1 output argument and no input arguments");
             }
             if (return_sparse) {
-                mwSize nmax=0;
-                for (vector<double>::iterator it=mod_reduced->begin(); it!=mod_reduced->end(); ++it) {
-                    if (*it!=0) {
-                        ++nmax;
-                    }
-                }
-                sparse mod_out(group.n_groups,1,nmax);
-                mwIndex c=0;
-                mwIndex i=0;
-                mod_out.col[0]=0;
-                for (vector<double>::iterator it=mod_reduced->begin(); it!=mod_reduced->end(); ++it) {
-                    if (*it!=0) {
-                        mod_out.row[c]=i;
-                        mod_out.val[c]=*it;
-                        ++c;
-                    }
-                    ++i;
-                }
-                mod_out.col[1]=c;
+                sparse mod_out=*mod_reduced;
                 mod_out.export_matlab(plhs[0]);
             }
             else {
-                full mod_out(group.n_groups,1);
-                vector<double>::iterator it=mod_reduced->begin();
-                for (mwIndex i=0; i<group.n_groups; ++i) {
-                    mod_out[i]=*it;
-                    ++it;
-                }
+                full mod_out=*mod_reduced;
                 mod_out.export_matlab(plhs[0]);
             }
             //zero out mod_reduced for next iteration
