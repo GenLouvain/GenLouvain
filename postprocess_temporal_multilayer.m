@@ -1,11 +1,30 @@
 function S=postprocess_temporal_multilayer(S,T,max_coms)
+% post-process a temporal multilayer partition to maximise persistence
+%
+% Call as:
+%
+%     S=postprocess_temporal_multilayer(S)
+%
+%     S=postprocess_temporal_multilayer(S,T)
+%
+%     S=postprocess_temporal_multilayer(S,T,max_coms)
+%
+% Input: 
+% 
+%     S: multilayer partition
+%
+%     T: number of layers of S (defaults to 'size(S,2)')
+%
+%     max_coms: only run function when input partition has less than 
+%         'max_coms' communities, otherwise return input partition.
+%         (defauts to 'inf')
+%
+% Post-process a multilayer partition to maximise persistence without 
+% changing the community structure within layers, using the Hungarian
+% algorithm to solve the optimal assignment problem for each consecutive
+% pair of layers. Note that this procedure always increases temporal
+% multilayer modularity for any non-zereo value of omega.
 
-% post-process an NxT multilayer partition S with N nodes and T layers to
-% maximise persistence without changing the community structure within
-% layers. Uses the Hungarian algorithm to solve the optimal assignment
-% problem for each consecutive pair of layers. Note that this procedure
-% always increases temporal multilayer modularity for any non-zereo value
-% of omega.
 if nargin<2||isempty(T)
     T=size(S,2);
 end

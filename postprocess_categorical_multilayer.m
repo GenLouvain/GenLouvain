@@ -1,8 +1,25 @@
 function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
-
-% post-process an NxT multilayer partition S with N nodes and T layers to
-% maximise multiplex persistence without changing the community structure 
-% within layers. The algorithm iterates through layers in random order and 
+% post-process a multiplex multilayer partition to improve persistence
+%
+% Call as:
+%
+%     S=postprocess_temporal_multilayer(S)
+%
+%     S=postprocess_temporal_multilayer(S,T)
+%
+%     S=postprocess_temporal_multilayer(S,T,max_coms)
+%
+% Input: 
+% 
+%     S: multilayer partition
+%
+%     T: number of layers of S (defaults to 'size(S,2)')
+%
+%     max_coms: only run function when input partition has less than 
+%         'max_coms' communities, otherwise return input partition.
+%         (defauts to 'inf')
+%
+% The algorithm iterates through layers in random order and 
 % uses the Hungarian algorithm to solve the optimal assignment
 % problem for each layer. The algorithm stops once it cannot improve the 
 % assignment for any layer. Note that this procedure always increases multiplex
