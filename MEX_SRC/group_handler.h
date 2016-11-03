@@ -23,6 +23,7 @@
 #include <vector>
 #include <random>
 #include <ctime>
+#include <utility>
 
 
 typedef std::unordered_map<mwIndex, double> map_type;
@@ -47,17 +48,28 @@ struct unique_group_map {
 typedef unique_group_map set_type;
 
 
-//move node i to group with most improvement in modularity
+typedef std::pair<std::vector<mwIndex>,std::vector<double>> move_list;
+
+
+//move node to group with most improvement in modularity
 double move(group_index & g, mwIndex node, const mxArray * mod);
 
-//move node i to random group that increases modularity
+//move node to random group that increases modularity
 double moverand(group_index & g, mwIndex node, const mxArray * mod);
+
+//move node to random group with probability proportional to increase in modularity
+double moverandw(group_index & g, mwIndex node, const mxArray * mod);
+
+
+set_type possible_moves(group_index & g, mwIndex node, sparse & mod);
+
+set_type possible_moves(group_index & g, mwIndex node, full & mode);
 
 map_type mod_change(group_index &g, sparse &mod,set_type & unique_groups,mwIndex current_node);
 
 map_type mod_change(group_index &g, full & mod, set_type & unique_groups, mwIndex current_node);
 
-
+move_list positive_moves(set_type & unique_groups, map_type & mod_c);
 
 unique_group_map::unique_group_map(mwSize n) : ismember(std::vector<bool>(n,false)) {}
 
