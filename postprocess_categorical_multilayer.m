@@ -51,7 +51,7 @@ end
 
 [N0,T0]=size(S);
 
-if max(S(:))<max_coms % don't do anything if to many communities for performance
+if max(S(:))<max_coms % don't do anything if too many communities for performance
 
 % tidy assignment
 [~,~,S]=unique(S);    
