@@ -30,7 +30,6 @@
 
 #define NUM_TOL 1e-10
 
-std::default_random_engine generator((unsigned int)time(0));
 
 typedef std::unordered_map<mwIndex, double> map_type;
 //typedef std::map<mwIndex, double> map_type;
@@ -42,17 +41,14 @@ struct unique_group_map {
     unique_group_map(mwSize n);
     std::vector<bool> ismember;
     std::vector<mwIndex> members;
-    
     bool count(mwIndex i);
     void insert(mwIndex i);
-    
     typedef std::vector<mwIndex>::iterator iterator;
     iterator begin();
     iterator end();
 };
 
 typedef unique_group_map set_type;
-
 
 typedef std::pair<std::vector<mwIndex>,std::vector<double>> move_list;
 
@@ -66,7 +62,6 @@ template<class M> double moverand(group_index & g, mwIndex node, const M & mod);
 //move node to random group with probability proportional to increase in modularity
 template<class M> double moverandw(group_index & g, mwIndex node, const M & mod);
 
-
 set_type possible_moves(group_index & g, mwIndex node, const sparse & mod);
 
 set_type possible_moves(group_index & g, mwIndex node, const full & mod);
@@ -78,22 +73,17 @@ map_type mod_change(group_index &g, const full & mod, set_type & unique_groups, 
 move_list positive_moves(set_type & unique_groups, map_type & mod_c);
 
 
-//implement unique_group_map
+//implement unique_group_map (quick membership check and insertion of elements, quick iteration over members, unordered)
 unique_group_map::unique_group_map() : ismember(std::vector<bool>()) {}
-
 unique_group_map::unique_group_map(mwSize n) : ismember(std::vector<bool>(n,false)) {}
-
 bool unique_group_map::count(mwIndex i) {return ismember[i];}
-
 void unique_group_map::insert(mwIndex i) {
     if (!ismember[i]) {
         ismember[i] = true;
         members.push_back(i);
     }
 }
-
 unique_group_map::iterator unique_group_map::begin() { return members.begin(); }
-
 unique_group_map::iterator unique_group_map::end() { return members.end(); }
 
 //implement template functions
@@ -101,14 +91,11 @@ template<class M> double move(group_index & g, mwIndex node, const M & mod){
     set_type unique_groups=possible_moves(g, node, mod);
     map_type mod_c=mod_change(g, mod, unique_groups, node);
     
-    
     //find best move
     double mod_max=0;
     double d_step=0;
-    
     mwIndex group_move=g.nodes[node]; //stay in current group if no improvement
-    
-    for(set_type::iterator it=unique_groups.begin();it!=unique_groups.end();it++){
+    for(set_type::iterator it=unique_groups.begin();it!=unique_groups.end();++it){
         if(mod_c[*it]>mod_max){
             mod_max=mod_c[*it];
             group_move=*it;
@@ -120,16 +107,19 @@ template<class M> double move(group_index & g, mwIndex node, const M & mod){
         g.move(node,group_move);
         d_step+=mod_max;
     }
-    
     return d_step;
 }
+
+
+//set up random engine
+std::default_random_engine generator((unsigned int)time(0));
 
 //move node to random group increasing modularity
 template<class M> double moverand(group_index & g, mwIndex node, const M & mod){
     set_type unique_groups=possible_moves(g, node, mod);
     map_type mod_c=mod_change(g, mod, unique_groups, node);
     
-    //find a random modularity increasing move
+    //find modularity increasing moves
     move_list mod_pos=positive_moves(unique_groups, mod_c);
     
     // move node to a random group that increases modularity
@@ -148,8 +138,11 @@ template<class M> double moverand(group_index & g, mwIndex node, const M & mod){
 template<class M> double moverandw(group_index & g, mwIndex node, const M & mod){
     set_type unique_groups=possible_moves(g, node, mod);
     map_type mod_c=mod_change(g, mod, unique_groups, node);
-
+    
+    //find modularity increasing moves
     move_list mod_pos=positive_moves(unique_groups, mod_c);
+    
+    //move node to a random group that increases modularity with probability proportional to the increase
     double d_step=0;
     if (!mod_pos.first.empty()) {
         std::discrete_distribution<mwIndex> randindex(mod_pos.second.begin(),mod_pos.second.end());

@@ -31,7 +31,6 @@
 
 #include "mex.h"
 
-
 #include "matlab_matrix.h"
 #include "group_index.h"
 #include <unordered_map>
@@ -47,6 +46,7 @@ static group_index group;
 static vector<double> mod_reduced=vector<double>();
 static bool return_sparse;
 
+//metanetwork_reduce(handle, varargin)
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     if (nrhs>0) {
         //get handle to function to perform
@@ -57,13 +57,14 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         if (mxGetString(prhs[0],handle,strleng)) {
             mexErrMsgIdAndTxt("metanetwork_reduce:handle:string", "handle needs to be a string");
         }
+        
         enum func {ASSIGN, REDUCE, NODES, RETURN};
         const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"reduce", REDUCE}, {"nodes", NODES}, {"return", RETURN} });
 
-        
         //switch on handle
         if (function_switch.count(handle)>0) {
             switch (function_switch.at(handle)) {
+                    
                 case ASSIGN: {
                     //assign new group structure for aggregation
                     if (nrhs!=2) {
@@ -75,6 +76,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     return_sparse=false;
                     break;
                 }
+                    
                 case REDUCE: {
                     //add modularity contributions to current column
                     if (nrhs!=2||nlhs!=0) {
@@ -111,6 +113,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     }
                     break;
                 }
+                    
                 case NODES: {
                     //return matlab indeces of nodes in group i
                     if (nrhs!=2||nlhs<1) {
@@ -120,6 +123,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     nodes.export_matlab(plhs[0]);
                     break;
                 }
+                    
                 case RETURN: {
                     //return modularity contributions and reset
                     if (nrhs!=1|nlhs!=1) {
@@ -141,9 +145,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     break;
                 }
                     
-                default:
+                default: {
                     mexErrMsgIdAndTxt("metanetwork_reduce:switch","switch implementation error");
                     break;
+                }
             }
         } else {
             mexErrMsgIdAndTxt("group_handler:handle", "invalid handle");

@@ -41,7 +41,7 @@
 //
 //
 //      return: outputs the community assignment for all nodes as a tidy group vector, that is
-//              e.g. S = [1 2 1 3] rather than S = [2 4 2 6]
+//              e.g. S = [1 2 1 3] rather than S = [3 1 3 2]
 //
 //
 //  Version:
@@ -52,14 +52,11 @@
 
 #include "group_handler.h"
 
-// function map keys
-
 using namespace std;
 
 static group_index group;
 
-
-
+//group_handler(handle, varargin)
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     
     if (nrhs>0) {
@@ -157,6 +154,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
                     }
                     break;
                 }
+                    
+                default: {
+                    mexErrMsgIdAndTxt("metanetwork_reduce:switch","switch implementation error");
+                    break;
+                }
             }
         } else {
             mexErrMsgIdAndTxt("group_handler:handle", "invalid handle");
@@ -165,7 +167,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         mexErrMsgIdAndTxt("group_handler:input", "need handle to function");
     }
 }
-
 
 
 //find possible moves
@@ -180,6 +181,7 @@ set_type possible_moves(group_index & g, mwIndex node, const sparse & mod){
     }
     return unique_groups;
 }
+
 
 set_type possible_moves(group_index & g, mwIndex node, const full & mod){
     set_type unique_groups(g.n_groups);
@@ -199,7 +201,6 @@ map_type mod_change(group_index &g, const full & mod, set_type & unique_groups, 
     mwIndex current_group=g.nodes[current_node];
     map_type mod_c;
     double mod_current= mod[current_node];
-    
     for (set_type::iterator it1=unique_groups.begin(); it1!=unique_groups.end(); ++it1) {
         double mod_c_group=0;
         for(list<mwIndex>::iterator it2=g.groups[*it1].begin(); it2!=g.groups[*it1].end(); ++it2){
@@ -207,10 +208,8 @@ map_type mod_change(group_index &g, const full & mod, set_type & unique_groups, 
         }
         mod_c[*it1]=mod_c_group;
     }
-    
     mod_c[current_group]-=mod_current;
     mod_current=mod_c[current_group];
-    
     for (set_type::iterator it=unique_groups.begin(); it!=unique_groups.end(); ++it) {
         mod_c[*it]-=mod_current;
     }
@@ -221,29 +220,23 @@ map_type mod_change(group_index &g, const full & mod, set_type & unique_groups, 
 
 //calculates changes in modularity for sparse modularity matrix
 map_type mod_change(group_index & g, const sparse & mod, set_type & unique_groups, mwIndex current_node){
-    
     mwIndex current_group=g.nodes[current_node];
     map_type mod_c;
     double mod_current=mod.get(current_node, 0);
-    
     for(set_type::iterator it=unique_groups.begin(); it!=unique_groups.end();++it){
         mod_c[*it]=0;
     }
-    
     //calculate changes in modularity
     for (mwIndex i=0; i<mod.nzero(); ++i) {
         if (unique_groups.count(g.nodes[mod.row[i]])) {
             mod_c[g.nodes[mod.row[i]]]+=mod.val[i];
         }
     }
-    
     mod_c[current_group]-=mod_current;
     mod_current=mod_c[current_group];
-    
     for (set_type::iterator it=unique_groups.begin(); it!=unique_groups.end(); ++it) {
         mod_c[*it]-=mod_current;
     }
-    
     return mod_c;
 }
 
