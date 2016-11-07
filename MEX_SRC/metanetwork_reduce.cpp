@@ -33,6 +33,7 @@
 #include "group_index.h"
 #include <unordered_map>
 #include <cstring>
+#include <string>
 
 #ifndef OCTAVE
     #include "matrix.h"
@@ -53,82 +54,98 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         if (mxGetString(prhs[0],handle,strleng)) {
             mexErrMsgIdAndTxt("metanetwork_reduce:handle:string", "handle needs to be a string");
         }
+        enum func {ASSIGN, REDUCE, NODES, RETURN};
+        const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"reduce", REDUCE}, {"nodes", NODES}, {"return", RETURN} });
+
         
         //switch on handle
-        if (!strcmp(handle, "assign")) {
-            //assign new group structure for aggregation
-            if (nrhs!=2) {
-                mexErrMsgIdAndTxt("metanetwork_reduce:assign", "assign needs 1 input argument");
-            }
-            group=prhs[1];
-            //zero out mod_reduced for next iteration
-            mod_reduced=vector<double>(group.n_groups,0);
-            return_sparse=false;
-        }
-        else if (!strcmp(handle, "reduce")){
-            //add modularity contributions to current column
-            if (nrhs!=2||nlhs!=0) {
-                mexErrMsgIdAndTxt("metanetwork_reduce:reduce", "reduce needs 1 input and no output argument");
-            }
-            if (mxIsDouble(prhs[1])) {
-                if (mxIsSparse(prhs[1])) { //sparse modularity input
-                    return_sparse=true;
-                    sparse mod_s(prhs[1]);
-                    if (mod_s.m==group.n_nodes) {
-                        for (mwIndex i=0; i<mod_s.nzero(); i++) {
-                            mod_reduced[group.nodes[mod_s.row[i]]]+=mod_s.val[i];
-                        }
+        if (function_switch.count(handle)>0) {
+            switch (function_switch.at(handle)) {
+                case ASSIGN: {
+                    //assign new group structure for aggregation
+                    if (nrhs!=2) {
+                        mexErrMsgIdAndTxt("metanetwork_reduce:assign", "assign needs 1 input argument");
                     }
-                    else {
-                        mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
-                    }
+                    group=prhs[1];
+                    //zero out mod_reduced for next iteration
+                    mod_reduced=vector<double>(group.n_groups,0);
+                    return_sparse=false;
+                    break;
                 }
-                else {//full modularity input
-                    full mod_d(prhs[1]);
-                    if (mod_d.m==group.n_nodes) {
-                        for (mwIndex i=0; i<group.n_groups; i++) {
-                            for (list<mwIndex>::iterator it=group.groups[i].begin(); it!=group.groups[i].end(); ++it) {
-                                for (full::rowiterator rit=mod_d.rowit(*it); rit!=mod_d.rowit(*it+1); ++rit) {
-                                    mod_reduced[i]+=*rit;
+                case REDUCE: {
+                    //add modularity contributions to current column
+                    if (nrhs!=2||nlhs!=0) {
+                        mexErrMsgIdAndTxt("metanetwork_reduce:reduce", "reduce needs 1 input and no output argument");
+                    }
+                    if (mxIsDouble(prhs[1])) {
+                        if (mxIsSparse(prhs[1])) { //sparse modularity input
+                            return_sparse=true;
+                            sparse mod_s(prhs[1]);
+                            if (mod_s.m==group.n_nodes) {
+                                for (mwIndex i=0; i<mod_s.nzero(); i++) {
+                                    mod_reduced[group.nodes[mod_s.row[i]]]+=mod_s.val[i];
                                 }
+                            }
+                            else {
+                                mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
+                            }
+                        }
+                        else {//full modularity input
+                            full mod_d(prhs[1]);
+                            if (mod_d.m==group.n_nodes) {
+                                for (mwIndex i=0; i<group.n_groups; i++) {
+                                    for (list<mwIndex>::iterator it=group.groups[i].begin(); it!=group.groups[i].end(); ++it) {
+                                        for (full::rowiterator rit=mod_d.rowit(*it); rit!=mod_d.rowit(*it+1); ++rit) {
+                                            mod_reduced[i]+=*rit;
+                                        }
+                                    }
+                                }
+                            }
+                            else {
+                                mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
                             }
                         }
                     }
-                    else {
-                        mexErrMsgIdAndTxt("metanetwork_reduce:reduce:mod", "input modularity matrix has wrong size");
-                    }
+                    break;
                 }
+                case NODES: {
+                    //return matlab indeces of nodes in group i
+                    if (nrhs!=2||nlhs<1) {
+                        mexErrMsgIdAndTxt("metanetwork_reduce:nodes", "nodes needs 1 input and 1 output argument");
+                    }
+                    full nodes=group.index(*mxGetPr(prhs[1])-1);
+                    nodes.export_matlab(plhs[0]);
+                    break;
+                }
+                case RETURN: {
+                    //return modularity contributions and reset
+                    if (nrhs!=1|nlhs!=1) {
+                        mexErrMsgIdAndTxt("metanetwork_reduce:return", "return needs 1 output argument and no input arguments");
+                    }
+                    if (return_sparse) {
+                        sparse mod_out=mod_reduced;
+                        mod_out.export_matlab(plhs[0]);
+                    }
+                    else {
+                        full mod_out=mod_reduced;
+                        mod_out.export_matlab(plhs[0]);
+                    }
+                    //zero out mod_reduced for next iteration
+                    for (vector<double>::iterator it=mod_reduced.begin(); it!=mod_reduced.end(); ++it) {
+                        *it=0;
+                    }
+                    return_sparse=false;
+                    break;
+                }
+                    
+                default:
+                    mexErrMsgIdAndTxt("metanetwork_reduce:switch","switch implementation error");
+                    break;
             }
+        } else {
+            mexErrMsgIdAndTxt("group_handler:handle", "invalid handle");
         }
-        else if (!strcmp(handle, "nodes")) {
-            //return matlab indeces of nodes in group i
-            if (nrhs!=2||nlhs<1) {
-                mexErrMsgIdAndTxt("metanetwork_reduce:nodes", "nodes needs 1 input and 1 output argument");
-            }
-            full nodes=group.index(*mxGetPr(prhs[1])-1);
-            nodes.export_matlab(plhs[0]);
-        }
-        else if (!strcmp(handle, "return")) {
-            //return modularity contributions and reset
-            if (nrhs!=1|nlhs!=1) {
-                mexErrMsgIdAndTxt("metanetwork_reduce:return", "return needs 1 output argument and no input arguments");
-            }
-            if (return_sparse) {
-                sparse mod_out=mod_reduced;
-                mod_out.export_matlab(plhs[0]);
-            }
-            else {
-                full mod_out=mod_reduced;
-                mod_out.export_matlab(plhs[0]);
-            }
-            //zero out mod_reduced for next iteration
-            for (vector<double>::iterator it=mod_reduced.begin(); it!=mod_reduced.end(); ++it) {
-                *it=0;
-            }
-            return_sparse=false;
-         }
-    }
-    else {
+    } else {
         mexErrMsgIdAndTxt("metanetwork_reduce:handle", "need a handle to function");
     }
 }

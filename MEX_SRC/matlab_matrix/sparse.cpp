@@ -496,7 +496,7 @@ sparse sparse::operator / (const full &B){
 	return C;
 }
 
-double sparse::get(mwIndex i, mwIndex j){
+double sparse::get(mwIndex i, mwIndex j) const {
     if ( !(j<n&&i<m) ) {
         mexErrMsgIdAndTxt("sparse:get", "Index out of bounds");
     }

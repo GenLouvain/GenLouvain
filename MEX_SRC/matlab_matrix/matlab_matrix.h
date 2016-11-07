@@ -59,7 +59,7 @@ struct sparse{
 
 	mwSize nzero() const { return col[n];}
     
-    double get(mwIndex i, mwIndex j);
+    double get(mwIndex i, mwIndex j) const;
 	
 	void export_matlab(mxArray * & out);
 	

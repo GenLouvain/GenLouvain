@@ -165,7 +165,16 @@ if nargin<5||isempty(randmove)
     randmove=false;
 end
 if randmove
-    movefunction='moverand';
+    if ischar(randmove)
+        if any(strcmp(randmove,{'move','moverand','moverandw'}))
+            movefunction=randmove;
+        else
+            error('unknown value for ''randmove''');
+        end
+    else
+        % backwards compatibility: randmove=true
+        movefunction='moverand';
+    end
 else
     movefunction='move';
 end
