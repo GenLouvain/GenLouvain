@@ -278,7 +278,8 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         yb=y;
         if ~isempty(postprocessor)
             y=postprocessor(y);
-            y=tidy_config(y);
+            group_handler('assign',y);
+            y=group_handler('return');
         end
         
     end
@@ -358,7 +359,8 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
         yb=y;
         if ~isempty(postprocessor)
             y=postprocessor(y);
-             y=tidy_config(y);
+            group_handler('assign',y);
+            y=group_handler('return');
         end
         if recursive
             G=sparse(1:length(y),y,true);
