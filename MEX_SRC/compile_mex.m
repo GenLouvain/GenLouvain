@@ -9,7 +9,7 @@ if exist('OCTAVE_VERSION','builtin')
 
     mex -DOCTAVE -Imatlab_matrix group_handler.cpp matlab_matrix/full.cpp matlab_matrix/sparse.cpp group_index.cpp
 else
-    mex -largeArrayDims CXXFLAGS="\$CXXFLAGS" -Imatlab_matrix metanetwork_reduce.cpp matlab_matrix/full.cpp matlab_matrix/sparse.cpp group_index.cpp
+    mex -largeArrayDims CXXFLAGS="\$CXXFLAGS -O4" -Imatlab_matrix metanetwork_reduce.cpp matlab_matrix/full.cpp matlab_matrix/sparse.cpp group_index.cpp
 
     mex -largeArrayDims CXXFLAGS="\$CXXFLAGS -O4" -Imatlab_matrix group_handler.cpp matlab_matrix/full.cpp matlab_matrix/sparse.cpp group_index.cpp
 end
