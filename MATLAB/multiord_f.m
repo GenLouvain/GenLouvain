@@ -95,20 +95,25 @@ if length(gamma)==1
 end
 
 ii=[]; jj=[]; vv=[];
+ki=[]; kj=[]; kv=[];
+twom=0;
 for s=1:T
-    indx=[1:N]'+(s-1)*N;
+    indx=(1:N)'+(s-1)*N;
     [i,j,v]=find(A{s});
     ii=[ii;indx(i)]; jj=[jj;indx(j)]; vv=[vv;v];
     k=sum(A{s});
-    kv=zeros(N*T,1);
-    kv(indx)=k/sum(k);
-    kcell{s}=kv;
+    mm=sum(k);
+    twom=twom+mm;
+    ki=[ki;indx];
+    kj=[kj;ones(N,1)*s];
+    kv=[kv;k(:)./mm];
 end
 AA = sparse(ii,jj,vv,N*T,N*T);
-clear ii jj vv
+K=sparse(ki,kj,kv,N*T,T);
+clear ii jj vv ki kj kv
 kvec = full(sum(AA));
 AA = AA + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
-B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*kcell{ceil(i/(N+eps))}*kvec(i);
+B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*K(:,ceil(i/(N+eps)))*kvec(i);
 twom=twom+2*N*(T-1)*omega;
 
 end
