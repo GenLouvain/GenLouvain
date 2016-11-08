@@ -214,7 +214,7 @@ if isa(B,'function_handle')
     it(:,1)=M(1);
     ii=find(it(2:end)>0,3)+1;
     ii=[1,ii'];
-    for i=2:length(ii),
+    for i=2:length(ii)
         it(:,i)=M(ii(i));
     end
     it=it(ii,:);
@@ -237,7 +237,7 @@ else
         end
     end
     
-    if nnz(B-B'),
+    if nnz(B-B')
         B=(B+B')/2; disp('WARNING: Forced symmetric B matrix')
     end
     M=B;
