@@ -46,6 +46,9 @@ static group_index group;
 static vector<double> mod_reduced=vector<double>();
 static bool return_sparse;
 
+enum func {ASSIGN, REDUCE, NODES, RETURN};
+static const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"reduce", REDUCE}, {"nodes", NODES}, {"return", RETURN} });
+
 //metanetwork_reduce(handle, varargin)
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     if (nrhs>0) {
@@ -58,8 +61,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
             mexErrMsgIdAndTxt("metanetwork_reduce:handle:string", "handle needs to be a string");
         }
         
-        enum func {ASSIGN, REDUCE, NODES, RETURN};
-        const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"reduce", REDUCE}, {"nodes", NODES}, {"return", RETURN} });
+
 
         //switch on handle
         if (function_switch.count(handle)>0) {

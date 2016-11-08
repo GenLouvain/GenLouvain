@@ -55,6 +55,9 @@
 using namespace std;
 
 static group_index group;
+//switch on handle
+enum func {ASSIGN, MOVE, MOVERAND, MOVERANDW, RETURN};
+static const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"move", MOVE}, {"moverand", MOVERAND}, {"moverandw", MOVERANDW}, {"return", RETURN} });
 
 //group_handler(handle, varargin)
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
@@ -68,11 +71,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         if (mxGetString(prhs[0],handle,strleng)) {
             mexErrMsgIdAndTxt("group_handler:handle", "handle needs to be a string");
         }
-        
-        //switch on handle
-        enum func {ASSIGN, MOVE, MOVERAND, MOVERANDW, RETURN};
-        const unordered_map<string, func> function_switch({ {"assign", ASSIGN}, {"move", MOVE}, {"moverand", MOVERAND}, {"moverandw", MOVERANDW}, {"return", RETURN} });
-        
+                
         if (function_switch.count(handle)) {
             switch (function_switch.at(handle)) {
                 case ASSIGN: {
