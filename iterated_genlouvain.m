@@ -1,4 +1,8 @@
-function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,recursive)
+function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor)
+% Optimise modularity-like quality function by repeatedly applying GenLouvain
+%
+% Version:
+% Date:
 
 %set default for maximum size of modularity matrix
 if nargin<2
@@ -6,8 +10,8 @@ if nargin<2
 end
 
 %set level of reported/displayed text output
-if nargin<3
-    verbose = [];
+if nargin<3||isempty(verbose)
+    verbose = false;
 end
 
 
@@ -15,7 +19,6 @@ end
 if nargin<4
     randord = [];
 end
-
 
 %set move function (maximal (original Louvain) or random improvement)
 if nargin<5
@@ -32,23 +35,32 @@ if nargin<7
     postprocessor=[];
 end
 
-% set recursive option
-if nargin<8
-    recursive=[];
+% verbose output switch
+if verbose
+    mydisp = @(s) disp(s);
+else
+    mydisp = @(s) [];
 end
 
 S_old=[];
 n_it=1;
+mydisp('Iteration 1')
+[S,Q]=genlouvain(B,limit,verbose,randord,randmove,S0);
 
-[S,Q]=genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,recursive);
+mydisp('')
 
 Q_old=-inf;
-while (~isequal(S,S_old)) && Q-Q_old > 8*eps
+while ~isequal(S,S_old)
+    n_it=n_it+1;
     S_old=S;
     Q_old=Q;
-    [S,Q]=genlouvain(B,limit,verbose,randord,randmove,S,postprocessor,recursive);
-    fprintf('improvement in modularity: %f\n',Q-Q_old)
-    n_it=n_it+1;
+    
+    mydisp(sprintf('Iteration %u',n_it))
+    if ~isempty(postprocessor)
+        S=postprocessor(S);
+    end
+    [S,Q]=genlouvain(B,limit,verbose,randord,randmove,S);
+    mydisp(sprintf('Improvement in modularity: %f\n',Q-Q_old))
 end
 
 end
