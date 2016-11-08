@@ -1,6 +1,7 @@
-function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,recursive)
+function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
-%   Version 2.0 (July 2014)
+% Version: 2.0
+% Date: July 2014 
 %
 %   [S,Q] = GENLOUVAIN(B) with matrix B implements a Louvain-like greedy
 %   community detection method using the modularity/quality matrix B that
@@ -27,25 +28,30 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,re
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,0) forces index-ordered (cf.
 %   randperm-ordered) consideration of nodes, for deterministic results.
 %
-%   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,1) enables additional
-%   randomization to obtain a broader sample of the quality function landscape
-%   and mitigates some undesirable behavior for "multislice" modularity with
-%   ordinal coupling. Without 'randmove' enabled, the algorithm exhibits an
-%   abrupt change in behavior when the strength of the interslice coupling
-%   approaches the maximum value of the intraslice modularity matrices. With
-%   'randmove' enabled, the algorithm moves the node under consideration to a
-%   community chosen uniformly at random from all moves that increase the
-%   quality function, instead of choosing the move that maximally increases the
-%   quality function.
+%   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,randmove) controls additional
+%   randomization to obtain a broader sample of the quality function
+%   landscape. The possible values for 'randmove' are
+%       'move': always move node under consideration to the community that 
+%           results in maximal improvement in modularity (default)
+%       'moverand': move the node under consideration to a community chosen
+%           uniformly at random from all moves that increase the qualilty 
+%           function
+%       'moverandw': move the node under consideration to a community chosen
+%           at random from all moves that increase the qualilty where the
+%           probability of choosing a particular move is proportional to
+%           its increase in the quality function
+%       0: equivalent to 'move' (provided for backwards compatibility)
+%       1: equivalent to 'moverand' (provided for backwards compatibility)
+%
+%   'moverand', and 'moverandw' mitigate some undesirable behavior for 
+%   "multislice" modularity with ordinal coupling ('moverandw' tends to be 
+%   better behaved for large values of the interlayer coupling). With 
+%   'move', the algorithm exhibits an abrupt change in behavior when the 
+%   strength of the interslice coupling approaches the maximum value of the
+%   intraslice modularity matrices.
 %
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,randord,randmove,S0) uses S0 as an
 %   inital partition.
-%
-%   [S,Q] = GENLOUVAIN(B,limit,verbose,randord,randmove,S0,postprocessor),
-%   where postprocessor is a function handle pointing to a function of the
-%   form [S1]=postprocessor(S0), where S1 is a community structure with
-%   higher modularity. postprocessor is called during the first pass
-%   through the first phase of the Louvain algorithm.
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
@@ -66,7 +72,9 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0,postprocessor,re
 %   Notes:
 %     The matrix represented by B must be both symmetric and square.  This
 %     condition is not checked thoroughly if B is a function handle, but is
-%     essential to the proper use of this routine.
+%     essential to the proper use of this routine. When B is a matrix, 
+%     non-symmetric input is symmetrised (B=(B+B')/2), which preserves the
+%     quality function.
 %
 %     Under default options, this routine can return different results from
 %     run to run because it considers nodes in pseudorandom (randperm)
@@ -147,7 +155,7 @@ end
 if verbose
     mydisp = @(s) disp(s);
 else
-    mydisp = @(s) disp('');
+    mydisp = @(s) [];
 end
 
 %set randperm- v. index-ordered
@@ -184,17 +192,6 @@ if nargin<6||isempty(S0)
     S0=[];
 end
 
-% set postprocessing function
-if nargin<7
-    % default: do not do anything
-    postprocessor=[];
-end
-
-% set recursive option
-if nargin<8||isempty(recursive)
-    recursive=false;
-end
-
 %initialise variables and do symmetry check
 if isa(B,'function_handle')
     n=length(B(1));
@@ -209,7 +206,7 @@ if isa(B,'function_handle')
             error('Initial partition does not have the right size for the modularity matrix')
         end
     end
-    
+    %symmetry check (only checks symmetry of a small part of the matrix)
     M=B;
     it(:,1)=M(1);
     ii=find(it(2:end)>0,3)+1;
@@ -223,7 +220,6 @@ if isa(B,'function_handle')
     end
 else
     n = length(B);
-    
     S = (1:n)';
     if isempty(S0)
         S0=(1:n)';
@@ -236,7 +232,7 @@ else
             error('Initial partition does not have the right size for the modularity matrix');
         end
     end
-    
+    %symmetry check and fix if not symmetric
     if nnz(B-B')
         B=(B+B')/2; disp('WARNING: Forced symmetric B matrix')
     end
@@ -246,15 +242,10 @@ end
 dtot=0; %keeps track of total change in modularity
 y = S0;
 %Run using function handle, if provided
-while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle
-    
-    
-    
-    Sb=S;
-    
-    
+while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle  
     clocktime=clock;
     mydisp(['Merging ',num2str(length(y)),' communities  ',datestr(clocktime)]);
+    Sb=S;
     yb=[];
     while ~isequal(yb,y)
         dstep=1;	%keeps track of change in modularity in pass
@@ -272,23 +263,12 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
             y=group_handler('return');
             mydisp([num2str(max(y)),' change: ',num2str(dstep),...
                 ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
-            
-            
         end
         yb=y;
-        if ~isempty(postprocessor)
-            y=postprocessor(y);
-            group_handler('assign',y);
-            y=group_handler('return');
-        end
-        
     end
-    
-    
-    
-    %group_handler implements tidyconfig
-    S=y(S);
-    
+
+    %update partition
+    S=y(S); %group_handler implements tidyconfig
     y = unique(y);  %unique also puts elements in ascending order
     
     %calculate modularity and return if converged
@@ -318,31 +298,20 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         B = J;
         M=B;
     end
-    
 end
 
+% Run using matrix B
 S2 = (1:length(B))';
-
-
 Sb = [];
-
-while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) with B matrix
-    
-    
-    Sb = S2;
-    
+while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) with B matrix    
     clocktime=clock;
     mydisp(['Merging ',num2str(max(y)),' communities  ',datestr(clocktime)]);
     
-    
+    Sb = S2;
     yb = [];
-    
     while ~isequal(yb,y)
         dstep=1;
-        
         while (~isequal(yb,y)) && (dstep/dtot>2*eps) && (dstep>10*eps) %This is the loop around Blondel et al's "first phase"
-            
-            % mydisp([num2str(length(unique(y))),' ',num2str(Q)])
             yb = y;
             dstep=0;
             group_handler('assign',y);
@@ -357,30 +326,9 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
                 ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
         end
         yb=y;
-        if ~isempty(postprocessor)
-            y=postprocessor(y);
-            group_handler('assign',y);
-            y=group_handler('return');
-        end
-        if recursive
-            G=sparse(1:length(y),y,true);
-            for i=1:size(G,2)
-                ind=find(G(:,i));
-                current_mod=sum(sum(M(ind,ind)));
-                
-                [yi,new_mod]=genlouvain(M(ind,ind),[],0,randord,randmove);
-                if new_mod>current_mod+8*eps
-                    mydisp(sprintf('split community with %u nodes, change: %g',length(yi),new_mod-current_mod));
-                    y(ind)=max(y(:))+yi;
-                end
-                
-            end
-            
-            y=tidy_config(y);
-        end
-        
     end
     
+    %update partition
     S=y(S);
     S2=y(S2);
     
@@ -415,9 +363,3 @@ for j=ind(:)'
 end
 Mi=metanetwork_reduce('return');
 end
-
-
-
-
-
-
