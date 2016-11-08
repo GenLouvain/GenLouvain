@@ -1,8 +1,0 @@
-README.txt
-genlouvain.m
-private/*
-MEX_SRC/*.h
-MEX_SRC/*.cpp
-MEX_SRC/*.m
-MEX_SRC/matlab_matrix/*.cpp
-MEX_SRC/matlab_matrix/*.h
