@@ -58,7 +58,7 @@ if max(S(:))<max_coms % don't do anything if too many communities for performanc
 S=reshape(S,N,T);
 S_new=S;
 
-p0=0;
+p0=-inf;
 p1=multiplex_persistence(S); % checking
 
 while (p1-p0)>0
@@ -92,10 +92,7 @@ while (p1-p0)>0
             max_com=max_com+1;
         end
         end
-    end
-    
-    S_new=tidy_config(S_new);
-    
+    end    
     p1=multiplex_persistence(S_new);
     
     mydisp(sprintf('improvement found: %g',p1-p0));

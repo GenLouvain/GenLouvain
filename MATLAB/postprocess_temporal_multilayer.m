@@ -1,4 +1,4 @@
-function S=postprocess_temporal_multilayer(S,T,max_coms)
+function S=postprocess_temporal_multilayer(S,T,max_coms,verbose)
 % post-process a temporal multilayer partition to maximise persistence
 %
 % Call as:
@@ -28,6 +28,9 @@ function S=postprocess_temporal_multilayer(S,T,max_coms)
 if nargin<2||isempty(T)
     T=size(S,2);
 end
+
+
+
 N=numel(S)/T;
 
 
@@ -35,10 +38,23 @@ if nargin<3||isempty(max_coms)
     max_coms=inf;
 end
 
+if nargin<4||isempty(verbose)
+    verbose=false;
+end
+if verbose
+    mydisp=@(s) disp(s);
+else
+    mydisp=@(s) [];
+end
+
 [N0,T0]=size(S);
 
+
 if max(S(:))<max_coms % don't do anything if too many communities for performance
-    S=reshape(S,N,T);
+    S=reshape(S,N,T); 
+    if verbose
+        p0=temporal_persistence(S);
+    end
     max_com=max(S(:,1));
     for i=2:T
         [u1,~,e1]=unique(S(:,i-1)); % unique communities in previous layer
@@ -57,13 +73,16 @@ if max(S(:))<max_coms % don't do anything if too many communities for performanc
                 max_com=max_com+1;
             end
         end
-
     end
+    if verbose
+        p1=temporal_persistence(S);
+        fprintf('Improvement in persistence: %g\n',p1-p0);
+    end
+else
+    mydisp('number of communities exceeds ''max_coms'', skipping postprocessing')
 end
 
 % return in original format
-S=tidy_config(S);
-
 S=reshape(S,N0,T0);
 end
 
