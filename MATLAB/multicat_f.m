@@ -79,26 +79,36 @@ function [B,twom] = multicat_f(A,gamma,omega)
 %       Inderjit S. Jutla and Peter J. Mucha, "A generalized Louvain method
 %       for community detection implemented in MATLAB,"
 %       http://netwiki.amath.unc.edu/GenLouvain (2011).
+if nargin<2||isempty(gamma)
+    gamma=1;
+end
+
+if nargin<3||isempty(omega)
+    omega=1;
+end
 
 N=length(A{1});
 T=length(A);
 ii=[]; jj=[]; vv=[];
+ki=[]; kj=[]; kv=[];
 twom=0;
 for s=1:T
     indx=[1:N]'+(s-1)*N;
     [i,j,v]=find(A{s});
     ii=[ii;indx(i)]; jj=[jj;indx(j)]; vv=[vv;v];
     k=sum(A{s});
-    kv=zeros(N*T,1);
-    kv(indx)=k/sum(k);
-    kcell{s}=kv;
+    mm=sum(k);
+    ki=[ki;indx];
+    kj=[kj;ones(N,1)*s];
+    kv=[kv;k(:)./mm];
     twom=twom+sum(k);
 end
 AA = sparse(ii,jj,vv,N*T,N*T);
-clear ii jj vv
+K=sparse(ki,kj,kv,N*T,T);
+clear ii jj vv ki kj kv
 kvec = full(sum(AA));
 all2all = N*[(-T+1):-1,1:(T-1)];
 AA = AA + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
-B = @(i) AA(:,i) - kcell{ceil(i/(N+eps))}*kvec(i);
+B = @(i) AA(:,i) - K(:,ceil(i/(N+eps)))*kvec(i);
 twom=twom+2*N*(T-1)*T*omega;
 end
