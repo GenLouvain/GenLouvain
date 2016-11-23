@@ -44,10 +44,10 @@ end
 
 S_old=[];
 n_it=1;
-mydisp('Iteration 1')
+mydisp('Iteration 1');
 [S,Q]=genlouvain(B,limit,verbose,randord,randmove,S0);
 
-mydisp('')
+mydisp('');
 
 Q_old=-inf;
 while ~isequal(S,S_old)
@@ -55,12 +55,12 @@ while ~isequal(S,S_old)
     S_old=S;
     Q_old=Q;
     
-    mydisp(sprintf('Iteration %u',n_it))
+    mydisp(sprintf('Iteration %u',n_it));
     if ~isempty(postprocessor)
         S=postprocessor(S);
     end
     [S,Q]=genlouvain(B,limit,verbose,randord,randmove,S);
-    mydisp(sprintf('Improvement in modularity: %f\n',Q-Q_old))
+    mydisp(sprintf('Improvement in modularity: %f\n',Q-Q_old));
 end
 
 end
