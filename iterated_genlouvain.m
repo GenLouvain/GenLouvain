@@ -74,7 +74,7 @@ function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,post
 %   output. To ensure convergence, the function postprocessor should
 %   increase the value of the (multilayer) quality function for a partition 
 %   (e.g, kernigan-lin type algorithms in a monolayer or multilayer setting, 
-%   and "postprocess-temporal-multilayer.m",
+%   and "postprocess-ordinal-multilayer.m",
 %   "postprocess-categorical-multilayer.m" in HelperFunctions for a multilayer 
 %   setting) 
 %
@@ -90,10 +90,10 @@ function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,post
 %   a Newman-Girvan null model on each layer (see more detail in
 %   documentation of multiord.m)
 %
-%   PP = @(S) postprocess_temporal_multilayer(S,T); % define postprocessing
+%   PP = @(S) postprocess_ordinal_multilayer(S,T); % define postprocessing
 %   function handle that increases multilayer modularity without changing 
 %   intralayer partitions in an ordered multilayer networks (see 
-%   postprocess_temporal_multilayer.m for more detail)
+%   postprocess_ordinal_multilayer.m for more detail)
 %
 %   [S,Q,n_it] = ITERATED_GENLOUVAIN(B,10000,0,1,'moverandw',[], PP);
 %   S = reshape(S, N, T);

@@ -82,7 +82,7 @@ S=reshape(S,N,T);
 S_new=S;
 
 p0=-inf;
-p1=multiplex_persistence(S); % checking
+p1=categorical_persistence(S); % checking
 
 while (p1-p0)>0
     p0=p1;
@@ -116,7 +116,7 @@ while (p1-p0)>0
         end
         end
     end    
-    p1=multiplex_persistence(S_new);
+    p1=categorical_persistence(S_new);
     
     mydisp(sprintf('improvement found: %g',p1-p0));
 end
