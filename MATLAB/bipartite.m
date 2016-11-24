@@ -1,4 +1,6 @@
 function [B,twom] = bipartite(A,gamma)
+% BIPARTITE returns monolayer Barber modularity matrix for undirected bipartite networks, matrix version
+%
 %BIPARTITE [B,twom]=BIPARTITE(A,gamma)
 %
 % Input: A: MxN adjacency matrix for an undirected bipartite network
@@ -13,8 +15,26 @@ function [B,twom] = bipartite(A,gamma)
 %        [S,Q]=genlouvain(B);
 %        Q=Q/twom;
 %
-% Lucas Jeub
-% jeub@maths.ox.ac.uk
+%   Notes:
+%     This code assumes that the sparse quality/modularity matrix B will
+%     fit in memory and proceeds to build that matrix.  For larger systems,
+%     try BIPARTITE_F for undirected bipartite networks.
+%
+%     This code serves as a template and can be modified for situations
+%     with other wrinkles (e.g., different null models).  
+%
+%     By using this code, the user implicitly acknowledges that the authors
+%     accept no liability associated with that use.  (What are you doing
+%     with it anyway that might cause there to be a potential liability?!?)
+%
+% References: 
+%       Barber, M. Modularity and community detection in bipartite networks. 
+%           Phys. Rev. E 76, 066102 (2007).
+%
+% Citation: If you use this code, please cite as
+%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
+%       "A generalized Louvain method for community detection implemented in
+%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
 
 [m,n]=size(A);
 N=m+n;

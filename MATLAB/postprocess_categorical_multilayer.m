@@ -1,13 +1,15 @@
 function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
-% post-process a multiplex multilayer partition to improve persistence
+% POSTPROCESS_CATEGORICAL_MULTILAYER post-process an unordered multilayer partition 
+% to improve persistence when using uniform categorical coupling 
+% with the multilayer quality function in Mucha et al. 2010. 
 %
 % Call as:
 %
-%     S=postprocess_temporal_multilayer(S)
+%     S=postprocess_categorical_multilayer(S)
 %
-%     S=postprocess_temporal_multilayer(S,T)
+%     S=postprocess_categorical_multilayer(S,T)
 %
-%     S=postprocess_temporal_multilayer(S,T,max_coms)
+%     S=postprocess_categorical_multilayer(S,T,max_coms)
 %
 % Input: 
 % 
@@ -19,15 +21,36 @@ function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
 %         'max_coms' communities, otherwise return input partition.
 %         (defauts to 'inf')
 %
-% The algorithm iterates through layers in random order and 
+% Output:
+%
+%     S: post-processed multilayer partition 
+%
+% The algorithm iterates through layers in a random order and 
 % uses the Hungarian algorithm to solve the optimal assignment
 % problem for each layer. The algorithm stops once it cannot improve the 
-% assignment for any layer. Note that this procedure always increases multiplex
-% multilayer modularity for any non-zereo value of omega.
+% assignment for any layer. Note that this procedure always increases 
+% multilayer modularity with uniform categorical interlayer coupling for 
+% any non-zereo value of coupling strength omega.
 %
 % The output partition is stochastic due to random order and unlike in the
-% temporal case it is not guaranteed to have optimal persistence for the
-% given intra-layer community assignments.
+% ordinal case it is not guaranteed to have optimal persistence for the
+% given intralayer community assignments.
+%
+%   References:
+%
+%     Mucha, Peter J., Thomas Richardson, Kevin Macon, Mason A. Porter, and
+%     Jukka-Pekka Onnela. "Community Structure in Time-Dependent,
+%     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
+%
+%     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
+%     Multilayer Networks, with an Application to Correlation Networks", 
+%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016).
+%
+%   Citation: If you use this code, please cite as
+%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
+%       "A generalized Louvain method for community detection implemented in
+%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
 
 if nargin<2||isempty(T)
     T=size(S,2);

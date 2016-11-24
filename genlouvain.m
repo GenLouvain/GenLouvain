@@ -1,7 +1,7 @@
 function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
-% Version: 2.0
-% Date: July 2014 
+% Version: 2.1
+% Date: November 2016 
 %
 %   [S,Q] = GENLOUVAIN(B) with matrix B implements a Louvain-like greedy
 %   community detection method using the modularity/quality matrix B that
@@ -15,18 +15,24 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   community assignments, with S(i) identifying the community to which
 %   node i has been assigned.  The output Q gives the quality of the
 %   resulting partition of the network.
-%
+%   NOTE: The matrix represented by B must be both symmetric and square.  
+%   This condition is not checked thoroughly if B is a function handle, but 
+%   is essential to the proper use of this routine. When B is a matrix, 
+%   non-symmetric input is symmetrised (B=(B+B')/2), which preserves the
+%   quality function.
+
 %   [S,Q] = GENLOUVAIN(B) with function handle B such that B(i) returns
 %   the ith column of the modularity/quality matrix uses this function
 %   handle (to reduce the memory footprint for large networks) until the
 %   number of groups is less than 10000 and then builds the B matrix
-%   corresponding to the new aggregated network in subsequent passes.  Use
+%   corresponding to the new aggregated network in subsequent passes. Use
 %   [S,Q] = GENLOUVAIN(B,limit) to change this default=10000 limit.
 %
 %   [S,Q] = GENLOUVAIN(B,limit,0) suppresses displayed text output.
 %
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,0) forces index-ordered (cf.
-%   randperm-ordered) consideration of nodes, for deterministic results.
+%   randperm-ordered) consideration of nodes, for deterministic results
+%   with randord = 'move'.
 %
 %   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,randmove) controls additional
 %   randomization to obtain a broader sample of the quality function
@@ -44,14 +50,19 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %       1: equivalent to 'moverand' (provided for backwards compatibility)
 %
 %   'moverand', and 'moverandw' mitigate some undesirable behavior for 
-%   "multislice" modularity with ordinal coupling ('moverandw' tends to be 
+%   "multilayer" modularity with ordinal coupling ('moverandw' tends to be 
 %   better behaved for large values of the interlayer coupling). With 
 %   'move', the algorithm exhibits an abrupt change in behavior when the 
-%   strength of the interslice coupling approaches the maximum value of the
-%   intraslice modularity matrices.
+%   strength of the interlayer coupling approaches the maximum value of the
+%   intralayer modularity matrices (see Bazzi et al. 2016 for more detail).
 %
 %   [S,Q] = GENLOUVAIN(B,limit,verbose,randord,randmove,S0) uses S0 as an
-%   inital partition.
+%   inital partition. The default choice for S0 is all singletons (
+%   (and given by a length(B) by 1 vector). If a user specifies S0, it
+%   needs to satisfy: numel(S0) = length(B). Note that the size of S will
+%   match the size of S0. In a multilayer setting, a user may have to
+%   reshape S appropriate (e.g., reshape(S,N,T), where N is the number of
+%   nodes in each layer and T is the number of layers).
 %
 %   Example (using adjacency matrix A)
 %         k = full(sum(A));
@@ -65,16 +76,11 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     modularity/quality matrix
 %         B = A - k'*k/twom;
 %     instead of the function handle.  Intended use also includes the
-%     "multislice" network quality function of Mucha et al. 2010, where B
+%     "multilayer" network quality function of Mucha et al. 2010, where B
 %     encodes the interactions as an equivalent matrix (see examples posted
 %     online at http://netwiki.amath.unc.edu/GenLouvain).
 %
 %   Notes:
-%     The matrix represented by B must be both symmetric and square.  This
-%     condition is not checked thoroughly if B is a function handle, but is
-%     essential to the proper use of this routine. When B is a matrix, 
-%     non-symmetric input is symmetrised (B=(B+B')/2), which preserves the
-%     quality function.
 %
 %     Under default options, this routine can return different results from
 %     run to run because it considers nodes in pseudorandom (randperm)
@@ -125,6 +131,11 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     Jukka-Pekka Onnela. "Community Structure in Time-Dependent,
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
 %
+%     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
+%     Multilayer Networks, with an Application to Correlation Networks", 
+%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016). 
+%
 %     Porter, M. A., J. P. Onnela, and P. J. Mucha, "Communities in
 %     networks," Notices of the American Mathematical Society 56, 1082-1097
 %     & 1164-1166 (2009).
@@ -133,15 +144,17 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     A special thank you to Stephen Reid, whose greedy.m code was the
 %     original version that has over time developed into the present code,
 %     and Marya Bazzi for noticing the problematic behavior of genlouvain for
-%     ordinal interslice coupling and contributing code that developed into the
+%     ordinal interlayer coupling and contributing code that developed into the
 %     'randmove' option.
 %     Thank you also to Dani Bassett, Jesse Blocher, Mason Porter and Simi
 %     Wang for inspiring improvements to the code.
 %
 %   Citation: If you use this code, please cite as
-%        Inderjit S. Jutla, Lucas G. S. Jeub, and Peter J. Mucha,
-%        "A generalized Louvain method for community detection implemented
-%        in MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2011-2014).
+%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
+%       "A generalized Louvain method for community detection implemented in
+%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+%
+%   See also iterated_genlouvain HelperFunctions
 
 %set default for maximum size of modularity matrix
 if nargin<2||isempty(limit)
