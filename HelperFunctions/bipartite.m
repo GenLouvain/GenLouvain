@@ -35,6 +35,9 @@ function [B,twom] = bipartite(A,gamma)
 %       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
 %       "A generalized Louvain method for community detection implemented in
 %       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+if nargin<2||isempty(gamma)
+    gamma=1;
+end
 
 [m,n]=size(A);
 N=m+n;

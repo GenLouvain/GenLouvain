@@ -38,7 +38,7 @@ function [B,twom] = modularity(A,gamma)
 %       "A generalized Louvain method for community detection implemented in
 %       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
 
-if nargin<2
+if nargin<2||isempty(gamma)
 	gamma=1;
 end
 
@@ -46,7 +46,7 @@ k=sum(A,2);
 d=sum(A,1);
 twom=sum(k);
 
-B=full((A+A')/2-gamma/2*(k*d+d'*k)/twom);
+B=full((A+A')/2-gamma/2*(k*d+d'*k')/twom);
 
 end
 

@@ -1,4 +1,4 @@
-function [B,mm] = multiord(A,gamma,omega)
+function [B,twom] = multiord(A,gamma,omega)
 %MULTIORD  returns multilayer Newman-Girvan modularity matrix for ordered layers, matrix version
 % Works for directed or undirected networks
 %   Version 1, November, 2016.
@@ -122,15 +122,15 @@ gamma=repmat(gamma,T,1);
 end
 
 B=spalloc(N*T,N*T,N*N*T+2*N*T);
-mm=0;
+twom=0;
 for s=1:T
     kout=sum(A{s},1);
     kin=sum(A{s},2);
-    twom=sum(kout);
-	mm=mm+twom;
+    mm=sum(kout);
+	twom=twom+mm;
     indx=[1:N]+(s-1)*N;
-    B(indx,indx)=A{s}-gamma(s).*(kin*kout/twom);
+    B(indx,indx)=(A{s}+A{s}')-gamma(s)/2.*((kin*kout+kout'*kin')/mm);
 end
 B = B + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
-mm=mm+2*N*(T-1)*omega;
+twom=twom+2*N*(T-1)*omega;
 

@@ -100,8 +100,14 @@ if nargin<3||isempty(omega)
     omega=1;
 end
 
+
 N=length(A{1});
 T=length(A);
+
+if length(gamma)==1
+    gamma=repmat(gamma,T,1);
+end
+
 ii=[]; jj=[]; vv=[];
 ki=[]; kj=[]; kv=[];
 twom=0;
@@ -122,6 +128,6 @@ clear ii jj vv ki kj kv
 kvec = full(sum(AA));
 all2all = N*[(-T+1):-1,1:(T-1)];
 AA = AA + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
-B = @(i) AA(:,i) - K(:,ceil(i/(N+eps)))*kvec(i);
+B = @(i) AA(:,i) - gamma(ceil(i/(N+eps)))*K(:,ceil(i/(N+eps)))*kvec(i);
 twom=twom+2*N*(T-1)*T*omega;
 end

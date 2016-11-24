@@ -69,10 +69,20 @@ function [B,twomu] = multicatbipartite(A,gamma,omega)
 %       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
 %       "A generalized Louvain method for community detection implemented in
 %       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+if nargin<2||isempty(gamma)
+    gamma=1;
+end
 
+if nargin<3||isempty(omega)
+    omega=1;
+end
 [m,n]=size(A{1});
 N=m+n;
 T=length(A);
+if length(gamma)==1
+    gamma=repmat(gamma,T,1);
+end
+
 B=spalloc(N*T,N*T,2*m*n+N*T*(2*T-2));
 
 mu=0;
@@ -84,7 +94,7 @@ for s=1:T
     if mm==0
         B1=sparse(m,n);
     else
-        B1=A{s}-gamma*k*d/mm;
+        B1=A{s}-gamma(s)*k*d/mm;
     end
     
     indx=(s-1)*N;    
