@@ -105,9 +105,9 @@ function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,post
 %     order.  Because of the potentially large number of nearly-optimal
 %     partitions (Good et al. 2010), one is encouraged to investigate
 %     results of repeated applications of this code (and, if possible, of
-%     other computational heuristics).  To force deterministic behavior,
-%     ordering nodes by their index, pass zero as the fourth input:
-%     ITERATED_GENLOUVAIN(B,limit,verbose,0.
+%     other computational heuristics).  To force deterministic behavior with 
+%     randord = 'move', ordering nodes by their index, pass zero as the 
+%     fourth input: ITERATED_GENLOUVAIN(B,limit,verbose,0).
 %
 %     This algorithm is only "Louvain-like" in the sense that the two
 %     phases are used iteratively in the same manner as in the Louvain

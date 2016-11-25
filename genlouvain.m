@@ -1,5 +1,6 @@
 function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
+%
 % Version: v2.1-beta1
 % Date: Fri 25 Nov 2016 11:35:33 EST
 %
@@ -20,7 +21,7 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   is essential to the proper use of this routine. When B is a matrix, 
 %   non-symmetric input is symmetrised (B=(B+B')/2), which preserves the
 %   quality function.
-
+%
 %   [S,Q] = GENLOUVAIN(B) with function handle B such that B(i) returns
 %   the ith column of the modularity/quality matrix uses this function
 %   handle (to reduce the memory footprint for large networks) until the
@@ -43,7 +44,7 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %           uniformly at random from all moves that increase the qualilty 
 %           function
 %       'moverandw': move the node under consideration to a community chosen
-%           at random from all moves that increase the qualilty where the
+%           at random from all moves that increase the quality where the
 %           probability of choosing a particular move is proportional to
 %           its increase in the quality function
 %       0: equivalent to 'move' (provided for backwards compatibility)
@@ -87,9 +88,9 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     order.  Because of the potentially large number of nearly-optimal
 %     partitions (Good et al. 2010), one is encouraged to investigate
 %     results of repeated applications of this code (and, if possible, of
-%     other computational heuristics).  To force deterministic behavior,
-%     ordering nodes by their index, pass zero as the fourth input:
-%     GENLOUVAIN(B,limit,verbose,0).
+%     other computational heuristics).  To force deterministic behavior with 
+%     randord = 'move', ordering nodes by their index, pass zero as the 
+%     fourth input: GENLOUVAIN(B,limit,verbose,0).
 %
 %     This algorithm is only "Louvain-like" in the sense that the two
 %     phases are used iteratively in the same manner as in the Louvain
