@@ -23,8 +23,8 @@
 //
 //  Last modified by Lucas Jeub on 20/02/2013
 //
-// Version: v2.1-beta2
-// Date: Fri 25 Nov 2016 13:18:20 EST
+// Version: v2.1-beta3
+// Date: Fri 25 Nov 2016 18:06:40 EST
 
 #include "group_index.h"
 

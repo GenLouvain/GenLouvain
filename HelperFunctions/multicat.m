@@ -1,8 +1,8 @@
 function [B,twom] = multicat(A,gamma,omega)
 %MULTICAT  returns multilayer Newman-Girvan modularity matrix for unordered layers, matrix version
 %
-% Version: v2.1-beta2
-% Date: Fri 25 Nov 2016 13:18:19 EST
+% Version: v2.1-beta3
+% Date: Fri 25 Nov 2016 18:06:39 EST
 %
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          unordered multilayer undirected network
