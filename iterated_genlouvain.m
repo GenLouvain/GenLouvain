@@ -216,7 +216,7 @@ mydisp('Iteration 1');
 mydisp('');
 
 Q_old=-inf;
-while ~isequal(S,S_old)
+while ~isequal(S,S_old)&&norm(Q_old-Q)>10*eps
     n_it=n_it+1;
     S_old=S;
     Q_old=Q;
