@@ -2,8 +2,8 @@ function [S,Q,n_it]=iterated_genlouvain(B,limit,verbose,randord,randmove,S0,post
 % Optimise modularity-like quality function by iterating GenLouvain until convergence.
 % (i.e., until output partition does not change between two successive iterations)
 % 
-% Version: v2.1-beta1
-% Date: Fri 25 Nov 2016 11:35:33 EST
+% Version: v2.1-beta2
+% Date: Fri 25 Nov 2016 13:18:20 EST
 %
 %   [S,Q,n_it] = ITERATED_GENLOUVAIN(B) with matrix B repeatedly implements 
 %   GenLouvain until convergence to an output partition. After the first 

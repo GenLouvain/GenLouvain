@@ -1,8 +1,8 @@
 function pers=categorical_persistence(S)
 % CATEGORICAL_PERSISTENCE computes the persistence of an unordered multilayer partition
 %
-% Version:
-% Date:
+% Version: v2.1-beta2
+% Date: Fri 25 Nov 2016 13:18:19 EST
 %
 % pers = categorical_PERSISTENCE(S) with a single multilayer partition or a 
 % cell of multilayer partitions S (with S{i} the ith multilayer partition of 

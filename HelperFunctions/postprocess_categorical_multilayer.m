@@ -3,8 +3,8 @@ function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
 % to improve persistence when using uniform categorical coupling 
 % with the multilayer quality function in Mucha et al. 2010. 
 %
-% Version:
-% Date:
+% Version: v2.1-beta2
+% Date: Fri 25 Nov 2016 13:18:20 EST
 % 
 % Call as:
 %
