@@ -1,7 +1,7 @@
 function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %GENLOUVAIN  Louvain-like community detection, specified quality function.
-% Version: 2.1
-% Date: November 2016 
+% Version: v2.1-beta1
+% Date: Fri 25 Nov 2016 11:35:33 EST
 %
 %   [S,Q] = GENLOUVAIN(B) with matrix B implements a Louvain-like greedy
 %   community detection method using the modularity/quality matrix B that
