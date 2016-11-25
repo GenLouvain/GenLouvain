@@ -1,6 +1,9 @@
 function [S_sorted,s]=sort_ordinal(S)
 % SORT_ORDINAL reorders nodes to emphasize persistent structure in an ordered multilayer partition
 %
+% Version:
+% Date:
+% 
 % Nodes are reordered using the optimal leave order for the 
 % average linkage hierarchical clustering tree based on Hamming distance
 % between community assignments

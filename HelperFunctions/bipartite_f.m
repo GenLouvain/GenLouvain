@@ -1,7 +1,8 @@
 function [B,twom]=bipartite_f(A,gamma)
 % BIPARTITE_F returns monolayer Barber modularity matrix for undirected bipartite networks, function handle version
 %
-%BIPARTITE_f [B,twom]=BIPARTITE_f(A,gamma)
+% Version:
+% Date:
 %
 % Input: A: MxN adjacency matrix for an undirected bipartite network
 %        gamma: resolution parameter

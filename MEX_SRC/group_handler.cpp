@@ -44,10 +44,8 @@
 //              e.g. S = [1 2 1 3] rather than S = [3 1 3 2]
 //
 //
-//  Version:
-//  Author:
-//  Email:
-//  Date:
+// Version:
+// Date:
 
 
 #include "group_handler.h"

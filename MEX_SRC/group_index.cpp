@@ -22,6 +22,9 @@
 //
 //
 //  Last modified by Lucas Jeub on 20/02/2013
+//
+// Version:
+// Date:
 
 #include "group_index.h"
 

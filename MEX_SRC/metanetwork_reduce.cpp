@@ -23,10 +23,8 @@
 //      nodes: takes a group and returns the matlab index of all nodes in this group
 //
 //
-//  Version:
-//  Author:
-//  Email:
-//  Date:
+// Version:
+// Date:
 
 
 #include "mex.h"

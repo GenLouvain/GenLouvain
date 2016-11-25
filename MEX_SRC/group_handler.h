@@ -4,10 +4,8 @@
 //
 //  Created by Lucas Jeub on 21/11/2012.
 //
-//  Version:
-//  Author:
-//  Email:
-//  Date:
+// Version:
+// Date:
 
 #ifndef __group_handler__group_handler__
 #define __group_handler__group_handler__

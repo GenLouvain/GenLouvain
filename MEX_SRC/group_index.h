@@ -22,6 +22,9 @@
 //
 //
 //  Last modified by Lucas Jeub on 25/07/2014
+// 
+// Version:
+// Date:
 
 #ifndef GROUP_INDEX_H
 #define GROUP_INDEX_H

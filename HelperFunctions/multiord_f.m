@@ -1,8 +1,10 @@
 function [B,twom] = multiord_f(A,gamma,omega)
 %MULTIORD_F  returns multilayer Newman-Girvan modularity matrix for ordered undirected layers, function handle version
 % Only works for undirected networks 
-%   Version 1, November, 2016.
 %
+% Version:
+% Date:
+% 
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          ordered undirected multilayer network
 %          gamma: intralayer resolution parameter
