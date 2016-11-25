@@ -129,7 +129,7 @@ for s=1:T
     mm=sum(kout);
 	twom=twom+mm;
     indx=[1:N]+(s-1)*N;
-    B(indx,indx)=(A{s}+A{s}')-gamma(s)/2.*((kin*kout+kout'*kin')/mm);
+    B(indx,indx)=(A{s}+A{s}')/2-gamma(s)/2.*((kin*kout+kout'*kin')/mm);
 end
 B = B + omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
 twom=twom+2*N*(T-1)*omega;
