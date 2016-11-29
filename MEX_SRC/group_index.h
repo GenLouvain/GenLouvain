@@ -23,8 +23,8 @@
 //
 //  Last modified by Lucas Jeub on 25/07/2014
 // 
-// Version: v2.1-beta3
-// Date: Fri 25 Nov 2016 18:06:40 EST
+// Version: 2.1
+// Date: Tue 29 Nov 2016 15:29:58 EST
 
 #ifndef GROUP_INDEX_H
 #define GROUP_INDEX_H

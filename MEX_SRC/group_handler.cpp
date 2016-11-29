@@ -44,8 +44,8 @@
 //              e.g. S = [1 2 1 3] rather than S = [3 1 3 2]
 //
 //
-// Version: v2.1-beta3
-// Date: Fri 25 Nov 2016 18:06:40 EST
+// Version: 2.1
+// Date: Tue 29 Nov 2016 15:29:58 EST
 
 
 #include "group_handler.h"

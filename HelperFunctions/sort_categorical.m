@@ -1,8 +1,8 @@
 function [S_sorted,s1,s2]=sort_categorical(S)
 % SORT_CATEGORICAL reorders nodes and layers to emphasize persistent structure in an unordered multilayer partition
 %
-% Version: v2.1-beta3
-% Date: Fri 25 Nov 2016 18:06:40 EST
+% Version: 2.1
+% Date: Tue 29 Nov 2016 15:29:58 EST
 % 
 % Nodes and layers are reordered using the optimal leave order for the 
 % average linkage hierarchical clustering tree based on Hamming distance

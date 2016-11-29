@@ -1,8 +1,8 @@
 function pers=ordinal_persistence(S)
 % ORDINAL_PERSISTENCE computes the persistence of an ordered multilayer partition
 %
-% Version: v2.1-beta3
-% Date: Fri 25 Nov 2016 18:06:39 EST
+% Version: 2.1
+% Date: Tue 29 Nov 2016 15:29:57 EST
 % 
 % pers = ORDINAL_PERSISTENCE(S) with a single multilayer partition or a 
 % cell of multilayer partitions S (with S{i} the ith multilayer partition

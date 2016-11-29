@@ -4,8 +4,8 @@
 //
 //  Created by Lucas Jeub on 21/11/2012.
 //
-// Version: v2.1-beta3
-// Date: Fri 25 Nov 2016 18:06:40 EST
+// Version: 2.1
+// Date: Tue 29 Nov 2016 15:29:58 EST
 
 #ifndef __group_handler__group_handler__
 #define __group_handler__group_handler__

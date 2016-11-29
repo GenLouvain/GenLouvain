@@ -1,8 +1,8 @@
 function [B,twom] = modularitydir_f(A,gamma)
 % MODULARITYDIR_F returns monolayer Leicht-Newman modularity matrix for directed network given by adjacency matrix A, function handle version
 %
-% Version: v2.1-beta3
-% Date: Fri 25 Nov 2016 18:06:39 EST
+% Version: 2.1
+% Date: Tue 29 Nov 2016 15:29:57 EST
 % 
 %
 %   Input: A:  NxN adjacency matrices of a directed network
