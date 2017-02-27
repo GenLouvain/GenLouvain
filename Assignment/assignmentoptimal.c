@@ -7,6 +7,8 @@ function [assignment, cost] = assignmentoptimal(distMatrix)
     #include <matrix.h>
 #endif
 
+#include <stdbool.h>
+
 #define CHECK_FOR_INF
 #define ONE_INDEXING
 
