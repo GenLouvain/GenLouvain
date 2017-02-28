@@ -1,8 +1,8 @@
 function [B,twom] = modularity_f(A,gamma)
 %MODULARITY_F returns monolayer Newman-Girvan modularity matrix for undirected network given by adjacency matrix A, function handle version
 %
-% Version: 2.1
-% Date: Tue 29 Nov 2016 15:29:57 EST
+% Version: 2.1.1
+% Date: Mon 27 Feb 2017 19:15:15 EST
 % 
 % Only works for undirected networks
 %

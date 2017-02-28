@@ -1,8 +1,8 @@
 function [B,twom]=multicatdir_f(A,gamma,omega)
 %MULTICATDIR_F  returns multilayer Leicht-Newman modularity matrix for categorical directed layers, function handle version
 %
-% Version: 2.1
-% Date: Tue 29 Nov 2016 15:29:57 EST
+% Version: 2.1.1
+% Date: Mon 27 Feb 2017 19:15:15 EST
 %
 %   Input: A: Cell array of NxN adjacency matrices for each layer of a
 %          categorical directed multilayer network
