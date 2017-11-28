@@ -120,23 +120,23 @@ box):
 
 1. Ensure that the environment variables CXX and DL_LD point to a C++ compiler 
 	installed on your system (e.g. by running 
-		setenv(‘CXX’,’/usr/bin/g++’)
-		setenv(‘DL_LD’,’/usr/bin/g++’)
+		`setenv(‘CXX’,’/usr/bin/g++’)`
+		`setenv(‘DL_LD’,’/usr/bin/g++’)`
 	where ‘/usr/bin/g++’ may need to be replaced with the path to your compiler
 	depending on your system configuration).
 
 2. Include the ‘-arch i386’ option in CXXFLAGS and LDFLAGS by running
-		setenv('CXXFLAGS',[getenv('CXXFLAGS'),' -arch i386'])
-		setenv('LDFLAGS',[getenv('LDFLAGS'),' -arch i386'])
+		`setenv('CXXFLAGS',[getenv('CXXFLAGS'),' -arch i386'])`
+		`setenv('LDFLAGS',[getenv('LDFLAGS'),' -arch i386'])`
 	to create 32bit binaries.
 
 3. Change line 52 of 
 	/Applications/Octave.app/Contents/Resources/include/octave-3.4.0/octave/mexproto.h
-	from “#include <cstdlib>” to “#include <stdlib.h>” (without quotes) to 
+	from `#include <cstdlib>` to `#include <stdlib.h>` to 
 	avoid a conflict from including two different versions of the standard 
 	library.
 
-4. Finally run compile_mex to compile the binaries.
+4. Finally run `compile_mex` to compile the binaries.
 
 -------------------------------------------------------------------------------------
 
