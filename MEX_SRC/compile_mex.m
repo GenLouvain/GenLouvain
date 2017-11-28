@@ -24,4 +24,4 @@ end
 
 movefile(['metanetwork_reduce.',ext],['../private/metanetwork_reduce.',ext]);
 movefile(['group_handler.',ext],['../private/group_handler.',ext]);
-movefile(['assignmentoptimal.',ext],['../private/assignmentoptimal.',ext]);
+movefile(['assignmentoptimal.',ext],['../Assignment/assignmentoptimal.',ext]);
