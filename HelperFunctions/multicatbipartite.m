@@ -1,8 +1,8 @@
 function [B,twomu] = multicatbipartite(A,gamma,omega)
 % MULTICATBIPARTITE  returns multilayer Barber modularity matrix for unordered undirected bipartite networks, matrix version
 %
-% Version: 2.1.1
-% Date: Mon 27 Feb 2017 19:15:15 EST
+% Version: 2.1.2
+% Date: Tue Nov 28 14:20:20 EST 2017
 % 
 % MULTICATBIPARTITE [B,twomu] = MULTICATBIPARTITE(A,gamma,omega)
 %

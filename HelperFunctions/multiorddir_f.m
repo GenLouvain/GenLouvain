@@ -1,8 +1,8 @@
 function [B,twom]=multiorddir_f(A,gamma,omega)
 %MULTIORDDIR_F  returns multilayer Leicht-Newman modularity matrix for ordered directed layers, function handle version
 %
-% Version: 2.1.1
-% Date: Mon 27 Feb 2017 19:15:16 EST
+% Version: 2.1.2
+% Date: Tue Nov 28 14:20:21 EST 2017
 % 
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          ordered directed multilayer network

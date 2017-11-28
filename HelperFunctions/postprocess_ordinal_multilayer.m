@@ -3,8 +3,8 @@ function S=postprocess_ordinal_multilayer(S,T,max_coms,verbose)
 % to maximise persistence when using uniform ordinal coupling with the 
 % multilayer quality function in Mucha et al. 2010. 
 %
-% Version: 2.1.1
-% Date: Mon 27 Feb 2017 19:15:16 EST
+% Version: 2.1.2
+% Date: Tue Nov 28 14:20:21 EST 2017
 % 
 % (see Bazzi et al. 2016 for more detail on persistence and
 % post-processing when using the multilayer quality function in Mucha et

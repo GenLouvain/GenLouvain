@@ -23,8 +23,8 @@
 //      nodes: takes a group and returns the matlab index of all nodes in this group
 //
 //
-// Version: 2.1.1
-// Date: Mon 27 Feb 2017 19:15:16 EST
+// Version: 2.1.2
+// Date: Tue Nov 28 14:20:21 EST 2017
 
 
 #include "mex.h"

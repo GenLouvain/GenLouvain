@@ -1,8 +1,8 @@
 function [B,twomu] = multiordbipartite(A,gamma,omega)
 % MULTIORDBIPARTITE  returns multilayer Barber modularity matrix for ordered undirected bipartite networks, matrix version
 %
-% Version: 2.1.1
-% Date: Mon 27 Feb 2017 19:15:16 EST
+% Version: 2.1.2
+% Date: Tue Nov 28 14:20:20 EST 2017
 % 
 % MULTIORDBIPARTITE [B,twomu] = MULTIORDBIPARTITE(A,gamma,omega)
 %
