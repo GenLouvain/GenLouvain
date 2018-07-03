@@ -1,1 +1,12 @@
 .* export-ignore
+# configure line endings
+* text=auto
+*.txt text
+*.m text
+*.h text
+*.c text
+*.cpp text
+*.xcconfig text
+*.html text
+
+*.mex* binary
