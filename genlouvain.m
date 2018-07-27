@@ -253,7 +253,7 @@ else
     M=B;
 end
 
-dtot=0; %keeps track of total change in modularity
+dtot=eps; %keeps track of total change in modularity
 y = S0;
 %Run using function handle, if provided
 while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle  
