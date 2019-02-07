@@ -140,5 +140,7 @@ function C = coupling(size, type)
         case {'t', 'o'}
             C = diag(ones(size-1,1),1);
             C = C + C';
+        otherwise
+            error('unknown aspect type %s', type)
     end
 end
