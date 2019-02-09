@@ -122,13 +122,14 @@ function [B, twom] = multiaspect(A, gamma, omega, type)
     na = prod(aspects);
     [B, twom] = arrayfun(@(A, g) modularity(A{1}, g), A, gamma, ...
                          'UniformOutput', false);
+    B=cellfun(@sparse,B,'UniformOutput',false);
     B = blkdiag(B{:});
-    C = zeros(prod(aspects));
+    C = sparse(prod(aspects),prod(aspects));
     for a = 1:numel(aspects)
-        C = C + kron(kron(eye(prod(aspects(a+1:end))),coupling(aspects(a), type(a))*omega(a)),...
-                     eye(prod(aspects(1:a-1))));
+        C = C + kron(kron(speye(prod(aspects(a+1:end))),coupling(aspects(a), type(a))*omega(a)),...
+                     speye(prod(aspects(1:a-1))));
     end
-    C = kron(C, eye(length(A{1})));
+    C = kron(C, speye(length(A{1})));
     B = B + C;
     twom = sum([twom{:}]) + sum(sum(C));
 end
@@ -136,9 +137,9 @@ end
 function C = coupling(size, type)
     switch type
         case {'m', 'c'}
-            C = ones(size)-eye(size);
+            C = sparse(ones(size)-eye(size));
         case {'t', 'o'}
-            C = diag(ones(size-1,1),1);
+            C = diag(sparse(ones(size-1,1)),1);
             C = C + C';
         otherwise
             error('unknown aspect type %s', type)
