@@ -2,8 +2,8 @@ function [B,twom] = multiord(A,gamma,omega)
 %MULTIORD  returns multilayer Newman-Girvan modularity matrix for ordered layers, matrix version
 % Works for directed or undirected networks
 %
-% Version: 2.1.2
-% Date: Tue Nov 28 14:20:20 EST 2017
+% Version: 2.2.0
+% Date: Thu 11 Jul 2019 12:25:42 CEST
 %
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          ordered multilayer (directed or undirected) network
