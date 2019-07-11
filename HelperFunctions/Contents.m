@@ -26,10 +26,14 @@
 %   multiordbipartite_f                - returns multilayer Barber modularity matrix for ordered undirected bipartite networks, function handle version
 %
 %
+% Multilayer modularity with multiple aspects (supports mix of ordinal and categorical coupling)
+%
+%   multicat                           - returns multilayer Newman-Girvan modularity matrix for a multiaspect multilayer network with a mix of ordered and categorical coupling
+%
 % Postprocessing functions:
 %
-%   postprocess_categorical_multilayer - post-process an unordered multilayer partition 
-%   postprocess_ordinal_multilayer     - post-process an ordered multilayer partition 
+%   postprocess_categorical_multilayer - post-process an unordered multilayer partition
+%   postprocess_ordinal_multilayer     - post-process an ordered multilayer partition
 %
 %
 % Persistence:

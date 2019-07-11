@@ -39,40 +39,12 @@ function [B, twom] = multiaspect(A, gamma, omega, type)
 %          For a multiplex temporal network, one should have `ndims(A)==2`
 %          and `type='co'` (or `type='mt'`)
 %
-%   [B,twom] = MULTICAT(A,GAMMA, OMEGA) with A a cell array of square
-%   symmetric matrices of equal size each representing an undirected network
-%   "layer" computes the multilayer modularity matrix using the quality
-%   function described in Mucha et al. 2010, with intralayer resolution
-%   parameter GAMMA, and with interlayer coupling OMEGA connecting
-%   all-to-all categorical layers. Once the mulilayer modularity matrix is
-%   computed, optimization can be performed by the generalized Louvain code
-%   GENLOUVAIN or ITERATED_GENLOUVAIN. The sparse output matrix B can be used
-%   with other heuristics, provided the same mapping is used to go from the
-%   multilayer tensor to the multilayer flattened matrix. That is, the
-%   node-layer tuple (i,s) is mapped to i + (s-1)*N. [Note that we can define
-%   a mapping between a multilayer partition S_m stored as an N by T matrix
-%   and the corresponding flattened partition S stored as an NT by 1 vector.
-%   In particular S_m = reshape(S,N,T) and S = S_m(:).]
-%
-%   See also
-%       genlouvain heuristics:      GENLOUVAIN, ITERATED_GENLOUVAIN
-%       multilayer wrappers:        MULTICATF, MULTIORD, MULTIORDF
-%       other heuristics:           SPECTRAL23
-%       Kernighan-Lin improvement:  KLNB
-%
 %   Notes:
 %     The matrices in the cell array A are assumed to be square,
 %     symmetric, and of equal size.  These assumptions are not checked here.
 %
 %     This code assumes that the sparse quality/modularity matrix B will
-%     fit in memory and proceeds to build that matrix.  For larger systems,
-%     try MULTICAT_F for undirected layer networks.
-%
-%     This code serves as a template and can be modified for situations
-%     with other wrinkles (e.g., different intralayer null models,
-%     different numbers of nodes from layer-to-layer, or systems which are
-%     both multiplex and longitudinal).  That is, this code is only a
-%     starting point; it is by no means exhaustive.
+%     fit in memory and proceeds to build that matrix.
 %
 %     By using this code, the user implicitly acknowledges that the authors
 %     accept no liability associated with that use.  (What are you doing
@@ -106,11 +78,6 @@ function [B, twom] = multiaspect(A, gamma, omega, type)
 %     Thank you to Dani Bassett, Jesse Blocher, Bruce Rogers, and Simi Wang
 %     for their collaborative help which led to significant cleaning up
 %     of earlier versions of our multilayer community detection codes.
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
 
     aspects = size(A);
     if numel(omega) == 1

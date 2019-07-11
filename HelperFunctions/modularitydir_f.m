@@ -3,21 +3,21 @@ function [B,twom] = modularitydir_f(A,gamma)
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:20 EST 2017
-% 
+%
 %
 %   Input: A:  NxN adjacency matrices of a directed network
 %          gamma: resolution parameter
 %
-%   Output: B: function handle where B(i) returns the ith column of 
-%          [N]x[N] modularity matrix of the monolayer network 
+%   Output: B: function handle where B(i) returns the ith column of
+%          [N]x[N] modularity matrix of the monolayer network
 %           with adjacency matrix A
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=modularitydir_f(A,gamma);
-%          [S,Q]= genlouvain(B); 
+%          [S,Q]= genlouvain(B);
 %          Q=Q/twom;
 %   Notes:
-%     The matrix A is assumed to be square. This assumption is not checked 
+%     The matrix A is assumed to be square. This assumption is not checked
 %     here.
 %
 %     For smaller systems, it is potentially more efficient (and easier) to
@@ -25,7 +25,7 @@ function [B,twom] = modularitydir_f(A,gamma)
 %     large systems with undirected networks, use MODULARITY_F.
 %
 %     This code serves as a template and can be modified for situations
-%     with other wrinkles (e.g., different null models).  
+%     with other wrinkles (e.g., different null models).
 %
 %     By using this code, the user implicitly acknowledges that the authors
 %     accept no liability associated with that use.  (What are you doing
@@ -33,12 +33,8 @@ function [B,twom] = modularitydir_f(A,gamma)
 %
 %   References
 %     Elizabeth A. Leicht and Mark E. J. Newman. "Community structure in
-%     Directed Networks", Physical Review Letters 100, 118703 (2008). 
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+%     Directed Networks", Physical Review Letters 100, 118703 (2008).
+
 
 if nargin<2||isempty(gamma)
 	gamma=1;
@@ -48,8 +44,7 @@ k=sum(A,2);
 d=sum(A,1);
 twom=sum(k);
 A=(A+A')/2;
-    
+
 B=@(i) full(A(:,i)-gamma/2*(k*d(i)+d'*k(i))/twom);
 
 end
- 

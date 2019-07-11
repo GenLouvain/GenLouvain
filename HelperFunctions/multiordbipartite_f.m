@@ -3,7 +3,7 @@ function [B,twom] = multiordbipartite_f(A,gamma,omega)
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:20 EST 2017
-% 
+%
 % MULTIORDBIPARTITE_F [B,twomu] = MULTIORDBIPARTITE_F(A,gamma,omega)
 %
 % Input: A: Cell array of MxN adjacency matrices for each layer of a
@@ -18,37 +18,37 @@ function [B,twom] = multiordbipartite_f(A,gamma,omega)
 %         twomu: normalisation constant
 %
 % Usage: [B,twomu]=multiordbipartite_f(A,gamma,omega);
-%        [S,Q]=genlouvain(B); % see iterated_genlouvain.m and 
+%        [S,Q]=genlouvain(B); % see iterated_genlouvain.m and
 %          postprocess_ordinal_multilayer.m for how to improve output
 %          multilayer partition
 %        Q=Q/twom;
 %        S=reshape(S,M+N,T);
 %
-%  [B,twom] = MULTIORDBIPARTITE_F(A,GAMMA, OMEGA) with A a cell array of 
-%   matrices of equal size each representing an undirected bipartite network 
+%  [B,twom] = MULTIORDBIPARTITE_F(A,GAMMA, OMEGA) with A a cell array of
+%   matrices of equal size each representing an undirected bipartite network
 %  "layer" computes the multilayer Barber modularity matrix using the quality
-%   function described in Mucha et al. 2010, with intralayer resolution 
-%   parameter GAMMA, and with interlayer coupling OMEGA connecting 
-%   nearest-neighbor ordered layers.  Once the mulilayer modularity matrix 
-%   is computed, optimization can be performed by the generalized Louvain 
-%   code GENLOUVAIN or ITERATED_GENLOUVAIN. The  output B can be used with 
-%   other heuristics, provided the same mapping is used to go from the 
-%   multilayer tensor to the multilayer flattened matrix. That is, the 
+%   function described in Mucha et al. 2010, with intralayer resolution
+%   parameter GAMMA, and with interlayer coupling OMEGA connecting
+%   nearest-neighbor ordered layers.  Once the mulilayer modularity matrix
+%   is computed, optimization can be performed by the generalized Louvain
+%   code GENLOUVAIN or ITERATED_GENLOUVAIN. The  output B can be used with
+%   other heuristics, provided the same mapping is used to go from the
+%   multilayer tensor to the multilayer flattened matrix. That is, the
 %   node-layer tuple (i,s) is mapped to i + (s-1)*(M+N). [Note that we can
 %   define a mapping between a multilayer partition S_m stored as an (M+N)
-%   by T matrix and the corresponding flattened partition S stored as an MNT 
-%   by 1 vector. In particular S_m = reshape(S,M+N,T) and S = S_m(:). Note 
-%   that nodes i=1:M correspond to the first class (i.e. the rows of A) and 
-%   nodes i=M+1:M+N correspond to the second class (i.e. the columns of A) 
-%   of the bipartite network.] 
+%   by T matrix and the corresponding flattened partition S stored as an MNT
+%   by 1 vector. In particular S_m = reshape(S,M+N,T) and S = S_m(:). Note
+%   that nodes i=1:M correspond to the first class (i.e. the rows of A) and
+%   nodes i=M+1:M+N correspond to the second class (i.e. the columns of A)
+%   of the bipartite network.]
 %
 %
 %   Notes:
-%     The matrices in the cell array A are assumed to be of equal size. 
+%     The matrices in the cell array A are assumed to be of equal size.
 %     This assumption is not checked here.
 %
 %     For smaller systems, it is potentially more efficient (and easier) to
-%     directly use the sparse quality/modularity matrix B in MULTIORDBIPARTITE. 
+%     directly use the sparse quality/modularity matrix B in MULTIORDBIPARTITE.
 %
 %     This code serves as a template and can be modified for situations
 %     with other wrinkles (e.g., different intralayer null models,
@@ -60,18 +60,14 @@ function [B,twom] = multiordbipartite_f(A,gamma,omega)
 %     accept no liability associated with that use.  (What are you doing
 %     with it anyway that might cause there to be a potential liability?!?)
 %
-% References: 
-%       Barber, M. Modularity and community detection in bipartite networks. 
+% References:
+%       Barber, M. Modularity and community detection in bipartite networks.
 %           Phys. Rev. E 76, 066102 (2007).
 %
-%       Mucha, P. J., Richardson, T., Macon, K., Porter, M. A. & Onnela, J.-P. 
-%           Community structure in time-dependent, multiscale, and multiplex networks. 
+%       Mucha, P. J., Richardson, T., Macon, K., Porter, M. A. & Onnela, J.-P.
+%           Community structure in time-dependent, multiscale, and multiplex networks.
 %           Science 328, 876-878 (2010).
-%
-% Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 if nargin<2||isempty(gamma)
     gamma=1;
 end
@@ -106,15 +102,15 @@ C=omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
 
 
 %bipartite modularity matrix
-    function modi=modf(i)      
-        
+    function modi=modf(i)
+
         s=ceil(i/(N+eps));
-        if mm(s)~=0        
+        if mm(s)~=0
             ii=i-(s-1)*N;
             if ii<=m
-                indx=(m+1:N)+(s-1)*N;            
+                indx=(m+1:N)+(s-1)*N;
                 v=A{s}(ii,:)-gamma(s)*k(ii,s)*d(s,:)/mm(s);
- 
+
                 modi=sparse(indx,1,v,N*T,1,n+2);
             else
                 indx=(1:m)+(s-1)*N;
@@ -122,11 +118,11 @@ C=omega*spdiags(ones(N*T,2),[-N,N],N*T,N*T);
 
                 modi=sparse(indx,1,v,N*T,1,m+2);
             end
-            
+
             modi=modi+C(:,i);
         else
             modi=C(:,i);
-          
+
         end
     end
 

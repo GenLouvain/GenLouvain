@@ -15,26 +15,26 @@ function [B,twom] = multicat(A,gamma,omega)
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=multicat(A,gamma,omega);
-%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and 
+%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and
 %          postprocess_categorical_multilayer.m for how to improve output
 %          multilayer partition
 %          Q=Q/twom;
 %          S=reshape(S,N,T);
 %
 %   [B,twom] = MULTICAT(A,GAMMA, OMEGA) with A a cell array of square
-%   symmetric matrices of equal size each representing an undirected network 
-%   "layer" computes the multilayer modularity matrix using the quality 
-%   function described in Mucha et al. 2010, with intralayer resolution 
-%   parameter GAMMA, and with interlayer coupling OMEGA connecting 
-%   all-to-all categorical layers. Once the mulilayer modularity matrix is 
-%   computed, optimization can be performed by the generalized Louvain code 
-%   GENLOUVAIN or ITERATED_GENLOUVAIN. The sparse output matrix B can be used 
-%   with other heuristics, provided the same mapping is used to go from the 
-%   multilayer tensor to the multilayer flattened matrix. That is, the 
-%   node-layer tuple (i,s) is mapped to i + (s-1)*N. [Note that we can define 
-%   a mapping between a multilayer partition S_m stored as an N by T matrix 
-%   and the corresponding flattened partition S stored as an NT by 1 vector. 
-%   In particular S_m = reshape(S,N,T) and S = S_m(:).] 
+%   symmetric matrices of equal size each representing an undirected network
+%   "layer" computes the multilayer modularity matrix using the quality
+%   function described in Mucha et al. 2010, with intralayer resolution
+%   parameter GAMMA, and with interlayer coupling OMEGA connecting
+%   all-to-all categorical layers. Once the mulilayer modularity matrix is
+%   computed, optimization can be performed by the generalized Louvain code
+%   GENLOUVAIN or ITERATED_GENLOUVAIN. The sparse output matrix B can be used
+%   with other heuristics, provided the same mapping is used to go from the
+%   multilayer tensor to the multilayer flattened matrix. That is, the
+%   node-layer tuple (i,s) is mapped to i + (s-1)*N. [Note that we can define
+%   a mapping between a multilayer partition S_m stored as an N by T matrix
+%   and the corresponding flattened partition S stored as an NT by 1 vector.
+%   In particular S_m = reshape(S,N,T) and S = S_m(:).]
 %
 %   See also
 %       genlouvain heuristics:      GENLOUVAIN, ITERATED_GENLOUVAIN
@@ -73,8 +73,8 @@ function [B,twom] = multicat(A,gamma,omega)
 %     "Performance of modularity maximization in practical contexts,"
 %     Physical Review E 81, 046106 (2010).
 %
-%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating 
-%     Community Structure in Networks", Physical Review E 69, 026113 (2004). 
+%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating
+%     Community Structure in Networks", Physical Review E 69, 026113 (2004).
 %
 %     Mucha, Peter J., Thomas Richardson, Kevin Macon, Mason A. Porter, and
 %     Jukka-Pekka Onnela. "Community Structure in Time-Dependent,
@@ -88,11 +88,7 @@ function [B,twom] = multicat(A,gamma,omega)
 %     Thank you to Dani Bassett, Jesse Blocher, Bruce Rogers, and Simi Wang
 %     for their collaborative help which led to significant cleaning up
 %     of earlier versions of our multilayer community detection codes.
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 
 if nargin<2||isempty(gamma)
 gamma=1;
@@ -122,4 +118,3 @@ end
 all2all = N*[(-T+1):-1,1:(T-1)];
 B = B + omega*spdiags(ones(N*T,2*T-2),all2all,N*T,N*T);
 twom=twom + (N*T*(T-1)*omega);
-

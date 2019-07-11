@@ -1,44 +1,44 @@
 function [B,twom] = multiord_f(A,gamma,omega)
 %MULTIORD_F  returns multilayer Newman-Girvan modularity matrix for ordered undirected layers, function handle version
-% Only works for undirected networks 
+% Only works for undirected networks
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:20 EST 2017
-% 
+%
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          ordered undirected multilayer network
 %          gamma: intralayer resolution parameter
 %          omega: interlayer coupling strength
 %
-%   Output: B: function handle where B(i) returns the ith column of 
+%   Output: B: function handle where B(i) returns the ith column of
 %          [NxT]x[NxT] flattened modularity tensor for the
 %           multilayer network with uniform ordinal coupling (T is
 %           the number of layers of the network)
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=multiord_f(A,gamma,omega);
-%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and 
+%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and
 %          postprocess_ordinal_multilayer.m for how to improve output
 %          multilayer partition
 %          Q=Q/twom;
 %          S=reshape(S,N,T);
 %
 %   [B,twom] = MULTIORD_F(A,GAMMA, OMEGA) with A a cell array of square
-%   symmetric matrices of equal size each representing an undirected network 
-%   "layer" computes the multilayer Newman-Girvan modularity matrix using 
-%   the quality function described in Mucha et al. 2010, with intralayer 
+%   symmetric matrices of equal size each representing an undirected network
+%   "layer" computes the multilayer Newman-Girvan modularity matrix using
+%   the quality function described in Mucha et al. 2010, with intralayer
 %   resolution parameter GAMMA, and with interlayer coupling OMEGA connecting
-%   nearest-neighbor ordered layers.  The null model used for the quality 
-%   function is the Newman-Girvan null model (see e.g. Bazzi et al. for other 
-%   possible null models). Once the mulilayer modularity matrix is computed, 
-%   optimization can be performed by the generalized Louvain code GENLOUVAIN 
-%   or ITERATED_GENLOUVAIN. The output B can be used with other heuristics, 
-%   provided the same mapping is used to go from the multilayer tensor to 
-%   the multilayer flattened matrix. That is, the node-layer tuple (i,s) 
-%   is mapped to i + (s-1)*N. [Note that we can define a mapping between a 
+%   nearest-neighbor ordered layers.  The null model used for the quality
+%   function is the Newman-Girvan null model (see e.g. Bazzi et al. for other
+%   possible null models). Once the mulilayer modularity matrix is computed,
+%   optimization can be performed by the generalized Louvain code GENLOUVAIN
+%   or ITERATED_GENLOUVAIN. The output B can be used with other heuristics,
+%   provided the same mapping is used to go from the multilayer tensor to
+%   the multilayer flattened matrix. That is, the node-layer tuple (i,s)
+%   is mapped to i + (s-1)*N. [Note that we can define a mapping between a
 %   multilayer partition S_m stored as an N by T matrix and the corresponding
-%   flattened partition S stored as an NT by 1 vector. In particular 
-%   S_m = reshape(S,N,T) and S = S_m(:).] 
+%   flattened partition S stored as an NT by 1 vector. In particular
+%   S_m = reshape(S,N,T) and S = S_m(:).]
 %
 %
 %   See also
@@ -78,17 +78,17 @@ function [B,twom] = multiord_f(A,gamma,omega)
 %     "Performance of modularity maximization in practical contexts,"
 %     Physical Review E 81, 046106 (2010).
 %
-%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating 
-%     Community Structure in Networks", Physical Review E 69, 026113 (2004). 
+%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating
+%     Community Structure in Networks", Physical Review E 69, 026113 (2004).
 %
 %     Mucha, Peter J., Thomas Richardson, Kevin Macon, Mason A. Porter, and
 %     Jukka-Pekka Onnela. "Community Structure in Time-Dependent,
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
 %
 %     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
-%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
-%     Multilayer Networks, with an Application to Correlation Networks", 
-%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016). 
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal
+%     Multilayer Networks, with an Application to Correlation Networks",
+%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016).
 %
 %     Porter, M. A., J. P. Onnela, and P. J. Mucha, "Communities in
 %     networks," Notices of the American Mathematical Society 56, 1082-1097
@@ -98,11 +98,7 @@ function [B,twom] = multiord_f(A,gamma,omega)
 %     Thank you to Dani Bassett, Jesse Blocher, Bruce Rogers, and Simi Wang
 %     for their collaborative help which led to significant cleaning up
 %     of earlier versions of our multilayer community detection codes.
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 
 if nargin<2||isempty(gamma)
     gamma=1;

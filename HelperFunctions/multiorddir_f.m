@@ -3,38 +3,38 @@ function [B,twom]=multiorddir_f(A,gamma,omega)
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:21 EST 2017
-% 
+%
 %   Input: A: Cell array of NxN adjacency matrices for each layer of an
 %          ordered directed multilayer network
 %          gamma: intralayer resolution parameter
 %          omega: interlayer coupling strength
 %
-%   Output: B: function handle where B(i) returns the ith column of 
+%   Output: B: function handle where B(i) returns the ith column of
 %          [NxT]x[NxT] flattened modularity tensor for the
 %           multilayer network with uniform ordinal coupling (T is
 %           the number of layers of the network)
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=multiorddir_f(A,gamma,omega);
-%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and 
+%          [S,Q]= genlouvain(B); % see iterated_genlouvain.m and
 %          postprocess_ordinal_multilayer.m for how to improve output
 %          multilayer partition
 %          Q=Q/twom;
 %          S=reshape(S,N,T);
 %
 %   [B,twom] = MULTIORDDIR_F(A,GAMMA, OMEGA) with A a cell array of square
-%   matrices of equal size each representing an directed network "layer" 
-%   computes the Leicht-Newman multilayer modularity matrix Susing the 
-%   quality function described in Mucha et al. 2010, with intralayer 
-%   resolution parameter GAMMA, and with interlayer coupling OMEGA 
+%   matrices of equal size each representing an directed network "layer"
+%   computes the Leicht-Newman multilayer modularity matrix Susing the
+%   quality function described in Mucha et al. 2010, with intralayer
+%   resolution parameter GAMMA, and with interlayer coupling OMEGA
 %   connecting nearest-neighbor ordered layers. Once the mulilayer modularity
-%   matrix is computed, optimization can be performed by the generalized 
-%   Louvain code GENLOUVAIN or ITERATED_GENLOUVAIN. The output B can be used 
-%   with other heuristics, provided the same mapping is used to go from the 
-%   multilayer tensor to the multilayer flattened matrix. That is, the 
-%   node-layer tuple (i,s) is mapped to i + (s-1)*N. [Note that we can 
+%   matrix is computed, optimization can be performed by the generalized
+%   Louvain code GENLOUVAIN or ITERATED_GENLOUVAIN. The output B can be used
+%   with other heuristics, provided the same mapping is used to go from the
+%   multilayer tensor to the multilayer flattened matrix. That is, the
+%   node-layer tuple (i,s) is mapped to i + (s-1)*N. [Note that we can
 %   define a mapping between a multilayer partition S_m stored as an N by T
-%   matrix and the corresponding flattened partition S stored as an NT by 1 
+%   matrix and the corresponding flattened partition S stored as an NT by 1
 %   vector. In particular S_m = reshape(S,N,T) and S = S_m(:).]
 %
 %   See also
@@ -77,10 +77,10 @@ function [B,twom]=multiorddir_f(A,gamma,omega)
 %     Mucha, Peter J., Thomas Richardson, Kevin Macon, Mason A. Porter, and
 %     Jukka-Pekka Onnela. "Community Structure in Time-Dependent,
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
-%        
+%
 %     Elizabeth A. Leicht and Mark E. J. Newman. "Community structure in
-%     Directed Networks", Physical Review Letters 100, 118703 (2008). 
-% 
+%     Directed Networks", Physical Review Letters 100, 118703 (2008).
+%
 %     Porter, M. A., J. P. Onnela, and P. J. Mucha, "Communities in
 %     networks," Notices of the American Mathematical Society 56, 1082-1097
 %     & 1164-1166 (2009).
@@ -89,11 +89,7 @@ function [B,twom]=multiorddir_f(A,gamma,omega)
 %     Thank you to Dani Bassett, Jesse Blocher, Bruce Rogers, and Simi Wang
 %     for their collaborative help which led to significant cleaning up
 %     of earlier versions of our multilayer community detection codes.
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 
 
 if nargin<2||isempty(gamma)

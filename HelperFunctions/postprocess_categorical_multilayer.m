@@ -1,11 +1,11 @@
 function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
-% POSTPROCESS_CATEGORICAL_MULTILAYER post-process an unordered multilayer partition 
-% to improve persistence when using uniform categorical coupling 
-% with the multilayer quality function in Mucha et al. 2010. 
+% POSTPROCESS_CATEGORICAL_MULTILAYER post-process an unordered multilayer partition
+% to improve persistence when using uniform categorical coupling
+% with the multilayer quality function in Mucha et al. 2010.
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:21 EST 2017
-% 
+%
 % Call as:
 %
 %     S=postprocess_categorical_multilayer(S)
@@ -14,25 +14,25 @@ function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
 %
 %     S=postprocess_categorical_multilayer(S,T,max_coms)
 %
-% Input: 
-% 
+% Input:
+%
 %     S: multilayer partition
 %
 %     T: number of layers of S (defaults to 'size(S,2)')
 %
-%     max_coms: only run function when input partition has less than 
+%     max_coms: only run function when input partition has less than
 %         'max_coms' communities, otherwise return input partition.
 %         (defauts to 'inf')
 %
 % Output:
 %
-%     S: post-processed multilayer partition 
+%     S: post-processed multilayer partition
 %
-% The algorithm iterates through layers in a random order and 
+% The algorithm iterates through layers in a random order and
 % uses the Hungarian algorithm to solve the optimal assignment
-% problem for each layer. The algorithm stops once it cannot improve the 
-% assignment for any layer. Note that this procedure always increases 
-% multilayer modularity with uniform categorical interlayer coupling for 
+% problem for each layer. The algorithm stops once it cannot improve the
+% assignment for any layer. Note that this procedure always increases
+% multilayer modularity with uniform categorical interlayer coupling for
 % any non-zereo value of coupling strength omega.
 %
 % The output partition is stochastic due to random order and unlike in the
@@ -46,14 +46,10 @@ function S=postprocess_categorical_multilayer(S,T,max_coms,verbose)
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
 %
 %     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
-%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
-%     Multilayer Networks, with an Application to Correlation Networks", 
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal
+%     Multilayer Networks, with an Application to Correlation Networks",
 %     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016).
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 
 if nargin<2||isempty(T)
     T=size(S,2);
@@ -80,7 +76,7 @@ end
 if max(S(:))<max_coms % don't do anything if too many communities for performance
 
 % tidy assignment
-[~,~,S]=unique(S);    
+[~,~,S]=unique(S);
 S=reshape(S,N,T);
 S_new=S;
 
@@ -89,9 +85,9 @@ p1=categorical_persistence(S); % checking
 
 while (p1-p0)>0
     p0=p1;
-    % only update if improvement found (don't update in degenerate case 
+    % only update if improvement found (don't update in degenerate case
     % where change in persistence is 0)
-    S=S_new; 
+    S=S_new;
     max_com=max(S_new(:));
     order=randperm(T);
     for i=order
@@ -107,9 +103,9 @@ while (p1-p0)>0
             Gc=sparse(1:numel(ecj),ecj(:),1,numel(ecj),length(uc));
             overlap(j,:)=full(sum(Gc,1));
         end
-        dist=sum(overlap(:))-overlap; 
+        dist=sum(overlap(:))-overlap;
         S2=assignmentoptimal(dist);
-        
+
         for j=1:length(ui)
         if S2(j)~=0&&overlap(j,S2(j))>0
             S_new(Gi(:,j),i)=uc(S2(j)); % update assignment
@@ -118,9 +114,9 @@ while (p1-p0)>0
             max_com=max_com+1;
         end
         end
-    end    
+    end
     p1=categorical_persistence(S_new);
-    
+
     mydisp(sprintf('improvement found: %g',p1-p0));
 end
 

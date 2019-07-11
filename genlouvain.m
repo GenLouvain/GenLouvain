@@ -16,9 +16,9 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   community assignments, with S(i) identifying the community to which
 %   node i has been assigned.  The output Q gives the quality of the
 %   resulting partition of the network.
-%   NOTE: The matrix represented by B must be both symmetric and square.  
-%   This condition is not checked thoroughly if B is a function handle, but 
-%   is essential to the proper use of this routine. When B is a matrix, 
+%   NOTE: The matrix represented by B must be both symmetric and square.
+%   This condition is not checked thoroughly if B is a function handle, but
+%   is essential to the proper use of this routine. When B is a matrix,
 %   non-symmetric input is symmetrised (B=(B+B')/2), which preserves the
 %   quality function.
 %
@@ -38,10 +38,10 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   [S,Q]=GENLOUVAIN(B,limit,verbose,randord,randmove) controls additional
 %   randomization to obtain a broader sample of the quality function
 %   landscape. The possible values for 'randmove' are
-%       'move': always move node under consideration to the community that 
+%       'move': always move node under consideration to the community that
 %           results in maximal improvement in modularity (default)
 %       'moverand': move the node under consideration to a community chosen
-%           uniformly at random from all moves that increase the qualilty 
+%           uniformly at random from all moves that increase the qualilty
 %           function
 %       'moverandw': move the node under consideration to a community chosen
 %           at random from all moves that increase the quality where the
@@ -50,10 +50,10 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %       0: equivalent to 'move' (provided for backwards compatibility)
 %       1: equivalent to 'moverand' (provided for backwards compatibility)
 %
-%   'moverand', and 'moverandw' mitigate some undesirable behavior for 
-%   "multilayer" modularity with ordinal coupling ('moverandw' tends to be 
-%   better behaved for large values of the interlayer coupling). With 
-%   'move', the algorithm exhibits an abrupt change in behavior when the 
+%   'moverand', and 'moverandw' mitigate some undesirable behavior for
+%   "multilayer" modularity with ordinal coupling ('moverandw' tends to be
+%   better behaved for large values of the interlayer coupling). With
+%   'move', the algorithm exhibits an abrupt change in behavior when the
 %   strength of the interlayer coupling approaches the maximum value of the
 %   intralayer modularity matrices (see Bazzi et al. 2016 for more detail).
 %
@@ -88,8 +88,8 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     order.  Because of the potentially large number of nearly-optimal
 %     partitions (Good et al. 2010), one is encouraged to investigate
 %     results of repeated applications of this code (and, if possible, of
-%     other computational heuristics).  To force deterministic behavior with 
-%     randord = 'move', ordering nodes by their index, pass zero as the 
+%     other computational heuristics).  To force deterministic behavior with
+%     randord = 'move', ordering nodes by their index, pass zero as the
 %     fourth input: GENLOUVAIN(B,limit,verbose,0).
 %
 %     This algorithm is only "Louvain-like" in the sense that the two
@@ -133,9 +133,9 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
 %
 %     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
-%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
-%     Multilayer Networks, with an Application to Correlation Networks", 
-%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016). 
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal
+%     Multilayer Networks, with an Application to Correlation Networks",
+%     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016).
 %
 %     Porter, M. A., J. P. Onnela, and P. J. Mucha, "Communities in
 %     networks," Notices of the American Mathematical Society 56, 1082-1097
@@ -153,7 +153,8 @@ function [S,Q] = genlouvain(B,limit,verbose,randord,randmove,S0)
 %   Citation: If you use this code, please cite as
 %       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
 %       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+%       MATLAB," Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla, and
+%       Peter J. Mucha (2011-2019).
 %
 %   See also iterated_genlouvain HelperFunctions
 
@@ -256,7 +257,7 @@ end
 dtot=eps; %keeps track of total change in modularity
 y = S0;
 %Run using function handle, if provided
-while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle  
+while (isa(M,'function_handle')) %loop around each "pass" (in language of Blondel et al) with B function handle
     clocktime=clock;
     mydisp(['Merging ',num2str(length(y)),' communities  ',datestr(clocktime)]);
     Sb=S;
@@ -272,7 +273,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
                 di=group_handler(movefunction,i,M(i));
                 dstep=dstep+di;
             end
-            
+
             dtot=dtot+dstep;
             y=group_handler('return');
             mydisp([num2str(max(y)),' change: ',num2str(dstep),...
@@ -284,7 +285,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
     %update partition
     S=y(S); %group_handler implements tidyconfig
     y = unique(y);  %unique also puts elements in ascending order
-    
+
     %calculate modularity and return if converged
     if isequal(Sb,S)
         Q=0;
@@ -297,7 +298,7 @@ while (isa(M,'function_handle')) %loop around each "pass" (in language of Blonde
         clear('metanetwork_reduce');
         return
     end
-    
+
     %check wether #groups < limit
     t = length(unique(S));
     if (t>limit)
@@ -317,10 +318,10 @@ end
 % Run using matrix B
 S2 = (1:length(B))';
 Sb = [];
-while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) with B matrix    
+while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) with B matrix
     clocktime=clock;
     mydisp(['Merging ',num2str(max(y)),' communities  ',datestr(clocktime)]);
-    
+
     Sb = S2;
     yb = [];
     while ~isequal(yb,y)
@@ -335,23 +336,23 @@ while ~isequal(Sb,S2) %loop around each "pass" (in language of Blondel et al) wi
             end
             dtot=dtot+dstep;
             y=group_handler('return');
-            
+
             mydisp([num2str(max(y)),' change: ',num2str(dstep),...
                 ' total: ',num2str(dtot),' relative: ',num2str(dstep/dtot)]);
         end
         yb=y;
     end
-    
+
     %update partition
     S=y(S);
     S2=y(S2);
-    
+
     if isequal(Sb,S2)
         P=sparse(y,1:length(y),1);
         Q=full(sum(sum((P*M).*P)));
         return
     end
-    
+
     M = metanetwork(B,S2);
     y = unique(S2);  %unique also puts elements in ascending order
 end

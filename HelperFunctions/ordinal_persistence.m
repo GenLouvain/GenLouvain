@@ -3,18 +3,18 @@ function pers=ordinal_persistence(S)
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:21 EST 2017
-% 
-% pers = ORDINAL_PERSISTENCE(S) with a single multilayer partition or a 
+%
+% pers = ORDINAL_PERSISTENCE(S) with a single multilayer partition or a
 % cell of multilayer partitions S (with S{i} the ith multilayer partition
-% of cell S) computes the "persistence" of ordered multilayer partitions. The 
-% output pers is a vector such that pers(i) is the persistence of multilayer 
-% partition S{i} (stored as an N*T matrix where N is the number of nodes in 
-% each layer and T is the number of layers). For a multilayer partition with 
-% ordered layers, the value of persistence is the number of nodes that do 
-% not change community assignments between consecutive layers (see Bazzi 
+% of cell S) computes the "persistence" of ordered multilayer partitions. The
+% output pers is a vector such that pers(i) is the persistence of multilayer
+% partition S{i} (stored as an N*T matrix where N is the number of nodes in
+% each layer and T is the number of layers). For a multilayer partition with
+% ordered layers, the value of persistence is the number of nodes that do
+% not change community assignments between consecutive layers (see Bazzi
 % et al. 2016 for more detail). Ordinal persistence varies between 0 and 1.
-% Ordinal persistence is related to the multilayer quality function 
-% developed in Mucha et al. 2010 when one uses ordinal interlayer coupling. 
+% Ordinal persistence is related to the multilayer quality function
+% developed in Mucha et al. 2010 when one uses ordinal interlayer coupling.
 %
 %   References:
 %
@@ -25,12 +25,8 @@ function pers=ordinal_persistence(S)
 %     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
 %     J. Fenn, and Sam D. Howison. "Community Detection in Temporal Multilayer
 %     Networks, with an Application to Correlation Networks", MMS: A SIAM
-%     Interdisciplinary Journal 14, 1-41 (2016). 
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+%     Interdisciplinary Journal 14, 1-41 (2016).
+
 
 if ~iscell(S)
     S={S};

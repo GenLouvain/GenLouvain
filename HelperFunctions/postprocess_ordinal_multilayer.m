@@ -1,11 +1,11 @@
 function S=postprocess_ordinal_multilayer(S,T,max_coms,verbose)
-% POSTPROCESS_ORDINAL_MULTILAYER post-process an ordered multilayer partition 
-% to maximise persistence when using uniform ordinal coupling with the 
-% multilayer quality function in Mucha et al. 2010. 
+% POSTPROCESS_ORDINAL_MULTILAYER post-process an ordered multilayer partition
+% to maximise persistence when using uniform ordinal coupling with the
+% multilayer quality function in Mucha et al. 2010.
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:21 EST 2017
-% 
+%
 % (see Bazzi et al. 2016 for more detail on persistence and
 % post-processing when using the multilayer quality function in Mucha et
 % al. 2010 for ordered layers).
@@ -18,28 +18,28 @@ function S=postprocess_ordinal_multilayer(S,T,max_coms,verbose)
 %
 %     S=postprocess_ordinal_multilayer(S,T,max_coms)
 %
-% Input: 
-% 
+% Input:
+%
 %     S: multilayer partition
 %
 %     T: number of layers of S (defaults to 'size(S,2)')
 %
-%     max_coms: only run function when input partition has less than 
+%     max_coms: only run function when input partition has less than
 %         'max_coms' communities, otherwise return input partition.
 %         (defauts to 'inf')
 %
 % Output:
 %
-%     S: post-processed multilayer partition 
+%     S: post-processed multilayer partition
 %
-% Post-processes a multilayer partition to maximise persistence without 
+% Post-processes a multilayer partition to maximise persistence without
 % changing the community structure within layers, using the Hungarian
 % algorithm to solve the optimal assignment problem for each consecutive
 % pair of layers. Note that this procedure always increases
-% multilayer modularity with ordinal uniform interlayer coupling for any 
-% non-zereo value of coupling strength omega. This function can be 
-% particularly useful when using the multilayer quality function in 
-% Mucha et al. 2010 with low values of ordinal uniform interlayer coupling. 
+% multilayer modularity with ordinal uniform interlayer coupling for any
+% non-zereo value of coupling strength omega. This function can be
+% particularly useful when using the multilayer quality function in
+% Mucha et al. 2010 with low values of ordinal uniform interlayer coupling.
 %
 %   References:
 %
@@ -48,14 +48,10 @@ function S=postprocess_ordinal_multilayer(S,T,max_coms,verbose)
 %     Multiscale, and Multiplex Networks," Science 328, 876-878 (2010).
 %
 %     Bazzi, Marya, Mason A. Porter, Stacy Williams, Mark McDonald, Daniel
-%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal 
-%     Multilayer Networks, with an Application to Correlation Networks", 
+%     J. Fenn, and Sam D. Howison. "Community Detection in Temporal
+%     Multilayer Networks, with an Application to Correlation Networks",
 %     MMS: A SIAM Interdisciplinary Journal 14, 1-41 (2016).
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 
 if nargin<2||isempty(T)
     T=size(S,2);
@@ -83,7 +79,7 @@ end
 
 
 if max(S(:))<max_coms % don't do anything if too many communities for performance
-    S=reshape(S,N,T); 
+    S=reshape(S,N,T);
     if verbose
         p0=ordinal_persistence(S);
     end
@@ -117,4 +113,3 @@ end
 % return in original format
 S=reshape(S,N0,T0);
 end
-

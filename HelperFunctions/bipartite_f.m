@@ -9,7 +9,7 @@ function [B,twom]=bipartite_f(A,gamma)
 %
 % Output: B: function handle such that B(i) returns the ith column of the
 %            modularity matrix using the bipartite null-model
-%            of "Barber, M. Modularity and community detection in bipartite networks. 
+%            of "Barber, M. Modularity and community detection in bipartite networks.
 %            Phys. Rev. E 76, 066102 (2007)".
 %         twom: normalisation constant
 %
@@ -22,20 +22,16 @@ function [B,twom]=bipartite_f(A,gamma)
 %     directly use the sparse quality/modularity matrix B in BIPARTITE.
 %
 %     This code serves as a template and can be modified for situations
-%     with other wrinkles (e.g., different null models).  
+%     with other wrinkles (e.g., different null models).
 %
 %     By using this code, the user implicitly acknowledges that the authors
 %     accept no liability associated with that use.  (What are you doing
 %     with it anyway that might cause there to be a potential liability?!?)
 %
-% References: 
-%       Barber, M. Modularity and community detection in bipartite networks. 
+% References:
+%       Barber, M. Modularity and community detection in bipartite networks.
 %           Phys. Rev. E 76, 066102 (2007).
-%
-% Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+
 if nargin<2||isempty(gamma)
     gamma=1;
 end
@@ -51,7 +47,7 @@ mm=sum(k);
 twom=2*mm;
 
     function modi=modf(i)
-        
+
         if i<=m
             indx=(m+1:N);
             v=A(i,:)-gamma*k(i)*d/mm;
@@ -61,7 +57,7 @@ twom=2*mm;
             v=A(:,i-m)-gamma*k*d(i-m)/mm;
             modi=sparse(indx,1,v,N,1);
         end
-        
+
     end
 
 if mm==0

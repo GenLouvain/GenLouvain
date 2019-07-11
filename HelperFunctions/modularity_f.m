@@ -3,19 +3,19 @@ function [B,twom] = modularity_f(A,gamma)
 %
 % Version: 2.1.2
 % Date: Tue Nov 28 14:20:20 EST 2017
-% 
+%
 % Only works for undirected networks
 %
 %   Input: A:  NxN adjacency matrices of an undirected network
 %          gamma: resolution parameter
 %
-%   Output: B: function handle where B(i) returns the ith column of 
-%          [N]x[N] modularity matrix of the monolayer network 
+%   Output: B: function handle where B(i) returns the ith column of
+%          [N]x[N] modularity matrix of the monolayer network
 %           with adjacency matrix A
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=modularity_f(A,gamma);
-%          [S,Q]= genlouvain(B); 
+%          [S,Q]= genlouvain(B);
 %          Q=Q/twom;
 %   Notes:
 %
@@ -27,20 +27,16 @@ function [B,twom] = modularity_f(A,gamma)
 %     large systems with directed networks, use MODULARITYDIR_F.
 %
 %     This code serves as a template and can be modified for situations
-%     with other wrinkles (e.g., different null models).  
+%     with other wrinkles (e.g., different null models).
 %
 %     By using this code, the user implicitly acknowledges that the authors
 %     accept no liability associated with that use.  (What are you doing
 %     with it anyway that might cause there to be a potential liability?!?)
 %
 %    References:
-%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating 
-%     Community Structure in Networks", Physical Review E 69, 026113 (2004). 
-%
-%   Citation: If you use this code, please cite as
-%       Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla and Peter J. Mucha,
-%       "A generalized Louvain method for community detection implemented in
-%       MATLAB," http://netwiki.amath.unc.edu/GenLouvain (2016).
+%     Newman, Mark E. J. and Michelle Girvan. "Finding and Evaluating
+%     Community Structure in Networks", Physical Review E 69, 026113 (2004).
+
 
 if nargin<2||isempty(gamma)
 	gamma=1;
@@ -48,7 +44,7 @@ end
 
 k=sum(A,2);
 twom=sum(k);
-    
+
 B=@(i) full(A(:,i)-gamma*(k*k(i))/twom);
 
 end
