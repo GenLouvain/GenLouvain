@@ -1,5 +1,5 @@
-## GenLouvain Version 2.1
-### released November 2016
+## GenLouvain Version 2.2
+### released July 2019
 
 Please cite this code as
     Lucas G. S. Jeub, Marya Bazzi, Inderjit S. Jutla, and Peter J. Mucha,    
@@ -39,8 +39,12 @@ Peter Mucha (mucha@unc.edu).
 
 ## Changes from previous versions:
 
+#### Support for multiple aspects
+Version 2.2 of GenLouvain adds support for multilayer networks with multiple
+aspects (see "multiaspect.m" in "HelperFunctions").
+
 #### Additional randomization:
-Version 2.1 of genlouvain also a implements a new 'moverandw' option which chooses
+Version 2.1 of GenLouvain also a implements a new 'moverandw' option which chooses
 moves at random with a probability proportional to the increase in the quality
 function. This is in addition to the 'moverand' option from Version 2.0 which chooses
 moves uniformly at random from all possible moves that improve the quality function.
