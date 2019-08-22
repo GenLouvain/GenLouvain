@@ -9,9 +9,8 @@ function [B,twom] = modularity(A,gamma)
 %   Input: A:  NxN adjacency matrices of a directed or undirected network
 %          gamma: resolution parameter
 %
-%   Output: B: function handle where B(i) returns the ith column of
-%          [N]x[N] modularity matrix of the monolayer network
-%           with adjacency matrix A
+%   Output: B: modularity matrix of the monolayer network with adjacency 
+%           matrix A
 %           twom: normalisation constant
 %
 %   Example of usage: [B,twom]=modularity(A,gamma);
