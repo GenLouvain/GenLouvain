@@ -29,12 +29,15 @@ directory and available at https://uk.mathworks.com/matlabcentral/fileexchange/6
 Make sure that the "GenLouvain" folder and all its subfolders are on the
 MATLAB path to ensure that all dependencies between functions are accessible.
 
-If the mex executables for your system are not in the private directory, you
+### Mex files:
+
+The included precompiled mex executables were generated using MATLAB_R2019a and may not be compatible with other versions of MATLAB, resulting in an **Invalid MEX-file** error. If this is the case or the mex executables for your system are not in the private directory, you
 will need to compile these files on your system by running the `compile_mex.m`
 script from the "MEX_SRC" directory (check the mex documentation in your MATLAB).
 If you would like to share these compiled files with other users, email them to
 Peter Mucha (mucha@unc.edu).
 
+*If you get a __Cannot write to destination__ error when running `compile_mex.m`, remove or rename the offending file and try again.* 
 
 
 ## Changes from previous versions:
