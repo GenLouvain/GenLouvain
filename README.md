@@ -85,9 +85,11 @@ modularity, depending on whether the modularity matrix is provided as a sparse
 matrix or not. Depending on the amount of sparsity in the modularity matrix, it may
 be faster to convert it to a full matrix.
 
-More extensive documentation and example use of this code is provided online
-(http://netwiki.amath.unc.edu/GenLouvain) and in the individual functions (e.g., see
-`doc('genlouvain')` and `doc('iterated_genlouvain')`).
+More extensive documentation and example use of this code is provided in the inline documentation comments for the individual functions. 
+
+See `doc('genlouvain')` and `doc('iterated_genlouvain')` for more information on the main modularity opimising functions. 
+See `doc('HelperFunctions')` for a list of the pre-build modularity functions and post-processors and refer to the 
+documentation of the individual functions for more detailed instructions.
 
 ***IMPORTANT NOTE:***
 When using the multilayer quality function in Mucha et al. 2010, we recommend
